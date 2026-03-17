@@ -25,11 +25,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="overflow-x-hidden">
+    <html lang="en">
       <body
-        className={`${geistMono.variable} ${playfairDisplay.variable} font-sans antialiased overflow-x-hidden`}
+        className={`${geistMono.variable} ${playfairDisplay.variable} font-sans antialiased`}
       >
-        {children}
+        <div className="overflow-x-hidden">
+          {children}
+        </div>
       </body>
     </html>
   );
