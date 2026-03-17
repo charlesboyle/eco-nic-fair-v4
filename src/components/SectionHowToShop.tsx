@@ -153,8 +153,11 @@ function ToggleUI() {
         </div>
       </motion.div>
 
-      {/* ── Product — fills remaining space, price anchored toward center-bottom ── */}
-      <div className="flex-1 flex flex-col justify-end items-center px-5 pb-10">
+      {/* ── Product — skeleton image fills top, content anchors to card bottom ── */}
+      <div className="flex-1 flex flex-col px-5 pt-3 pb-4">
+
+        {/* Skeleton product image — expands to absorb all available vertical space */}
+        <div className="flex-1 w-full rounded-lg" style={{ backgroundColor: '#F0F0F0', minHeight: 32, marginBottom: 12 }} />
 
         {/* Skeleton placeholder boxes for product name */}
         <div className="flex flex-col items-center gap-1.5 mb-3">
@@ -163,7 +166,7 @@ function ToggleUI() {
         </div>
 
         {/* Price — inline-sized so green fill only wraps the price text */}
-        <div className="inline-block">
+        <div className="flex justify-center mb-3">
           <div className="relative inline-block">
 
             {/* Green stamp bg — scales from left, only as wide as the price */}
@@ -200,6 +203,21 @@ function ToggleUI() {
               </AnimatePresence>
             </motion.div>
 
+          </div>
+        </div>
+
+        {/* Skeleton size + qty selectors */}
+        <div className="flex justify-center gap-2">
+          {/* Size pill */}
+          <div style={{ height: 28, padding: '0 14px', borderRadius: 8, border: '1px solid #E8E8E8', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div style={{ width: 28, height: 7, borderRadius: 3, backgroundColor: '#EBEBEB' }} />
+            <div style={{ width: 10, height: 7, borderRadius: 3, backgroundColor: '#D5D5D5' }} />
+          </div>
+          {/* Qty stepper */}
+          <div style={{ height: 28, padding: '0 10px', borderRadius: 8, border: '1px solid #E8E8E8', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ width: 8, height: 8, borderRadius: 99, backgroundColor: '#E0E0E0' }} />
+            <div style={{ width: 10, height: 7, borderRadius: 3, backgroundColor: '#D0D0D0' }} />
+            <div style={{ width: 8, height: 8, borderRadius: 99, backgroundColor: '#E0E0E0' }} />
           </div>
         </div>
 
