@@ -4,6 +4,7 @@ import { useRef, useEffect } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import CurvedLoop from '@/components/CurvedLoop'
+import { CONTENT_MAX_W } from '@/lib/config'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -43,22 +44,23 @@ export default function Section2() {
     if (!el) return
     const words = el.querySelectorAll<HTMLElement>('.word')
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        words,
-        { opacity: 0, filter: 'blur(8px)' },
-        {
-          opacity: 1,
-          filter: 'blur(0px)',
-          stagger: 0.025,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 95%',
-            end: 'bottom 45%',
-            scrub: true,
-          },
-        }
-      )
+      words.forEach((word) => {
+        gsap.fromTo(
+          word,
+          { opacity: 0, filter: 'blur(8px)' },
+          {
+            opacity: 1,
+            filter: 'blur(0px)',
+            ease: 'none',
+            scrollTrigger: {
+              trigger: word,
+              start: 'top 88%',
+              end: 'top 72%',
+              scrub: true,
+            },
+          }
+        )
+      })
     }, el)
     return () => ctx.revert()
   }, [])
@@ -70,13 +72,13 @@ export default function Section2() {
         <CurvedLoop
           marqueeText={MARQUEE}
           speed={1.2}
-          curveAmount={80}
+          curveAmount={9}
           interactive={false}
-          className="!fill-[#111111] text-[4.2rem] font-heading"
+          className="!fill-[#111111] text-[3rem] font-heading"
           bandFill="#ffffff"
           awningColor="#F18C22"
           awningStripeWidth={200}
-          awningHeight={32}
+          awningHeight={26}
           bandPaddingTop={130}
           bandPaddingBottom={40}
           bottomBorderColor="#F18C22"
@@ -84,7 +86,7 @@ export default function Section2() {
         />
       </div>
 
-      <div ref={containerRef} className="px-6 pt-14 pb-20 md:px-14 md:pt-20 md:pb-32 max-w-2xl">
+      <div ref={containerRef} className={`px-6 pt-14 pb-20 md:px-14 md:pt-20 md:pb-32 w-full mx-auto ${CONTENT_MAX_W}`}>
 
         <p className="font-heading text-[clamp(26px,4.5vw,44px)] font-normal leading-tight text-[#555555] mt-5 mb-2">
           <W>Most sales cut prices,</W>
@@ -114,6 +116,17 @@ export default function Section2() {
         <p className="font-body font-medium text-[clamp(20px,3vw,28px)] leading-[1.55] text-[#111111] my-5">
           <W>The rest is on us.</W>
         </p>
+
+        <p className="font-heading text-[clamp(22px,3.5vw,36px)] font-normal leading-tight text-[#111111] mt-10 mb-5">
+          Shop before everyone else with Early Access
+        </p>
+
+        <a
+          href="#footer-countdown"
+          className="inline-block bg-[#0D0D0D] text-white rounded-full px-8 py-3 text-[14px] font-medium font-sans transition-opacity hover:opacity-80 active:scale-[0.97]"
+        >
+          Get early access
+        </a>
 
       </div>
     </section>
