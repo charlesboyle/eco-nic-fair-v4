@@ -105,8 +105,8 @@ const G2_M: [P, P, P, P] = [[1000, 470], [700, 470], [0, 255], [0, 178]]
 // ----- DESKTOP COORDINATES (Flatter, symmetrical layout) -----
 // Raised starting point (smaller y) to be closer to ending point
 // Control points (c1, c2) pulled closer to their anchor points vertically to flatten the curve trajectory
-const G1_D: [P,P,P,P] = [[0,280], [300,200], [800,145], [1000,128]]
-const G2_D: [P,P,P,P] = [[1000,280], [700,200], [200,145], [0,128]]
+const G1_D: [P,P,P,P] = [[0, 50], [300, 30], [800, 20], [1000, 10]]
+const G2_D: [P,P,P,P] = [[1000, 50], [700, 30], [200, 20], [0, 10]]
 
 export default function GarlandBunting() {
   return (

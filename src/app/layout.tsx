@@ -29,7 +29,7 @@ export default function RootLayout({
       <body
         className={`${geistMono.variable} ${playfairDisplay.variable} font-sans antialiased`}
       >
-        <div className="overflow-x-hidden">
+        <div className="overflow-x-clip">
           {children}
         </div>
       </body>

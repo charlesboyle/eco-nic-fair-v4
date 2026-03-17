@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "eco-nic-fair",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--", "--webpack", "-p", "3001"],
+      "port": 3001,
+      "cwd": "/Users/afnan/Documents/VIRGIO/eco-nic-fair/v4"
+    }
+  ]
+}

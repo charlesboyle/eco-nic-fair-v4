@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useEffect } from 'react'
+import { motion } from 'motion/react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import CurvedLoop from '@/components/CurvedLoop'
@@ -68,7 +69,13 @@ export default function Section2() {
   return (
     <section className="bg-white relative z-[1]">
       {/* z-[1] ensures the CurvedLoop SVG overflow paints above the hero section background */}
-      <div className="relative z-10">
+      <motion.div
+        className="relative z-10"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-60px' }}
+        transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+      >
         <CurvedLoop
           marqueeText={MARQUEE}
           speed={1.2}
@@ -84,7 +91,7 @@ export default function Section2() {
           bottomBorderColor="#F18C22"
           bottomBorderWidth={4}
         />
-      </div>
+      </motion.div>
 
       <div ref={containerRef} className={`px-6 pt-14 pb-20 md:px-14 md:pt-20 md:pb-32 w-full mx-auto ${CONTENT_MAX_W}`}>
 

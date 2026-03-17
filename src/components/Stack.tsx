@@ -34,12 +34,12 @@ function CardRotate({ children, onSendToBack, sensitivity, disableDrag = false }
   return (
     <motion.div
       className="absolute inset-0 cursor-grab"
-      style={{ x, y, rotateX, rotateY }}
       drag
       dragConstraints={{ top: 0, right: 0, bottom: 0, left: 0 }}
       dragElastic={0.6}
       whileTap={{ cursor: 'grabbing' }}
       onDragEnd={handleDragEnd}
+      style={{ x, y, rotateX, rotateY, touchAction: 'pan-y' }}
     >
       {children}
     </motion.div>
