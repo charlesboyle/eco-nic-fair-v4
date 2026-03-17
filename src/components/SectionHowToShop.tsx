@@ -423,9 +423,9 @@ const CART_ITEMS_DATA = [
   { name: 'Sadia',  ctm: 790  },
   { name: 'Feiza',  ctm: 690  },
 ]
-// Running eco-nic totals as each item is added
-const CTM_TOTALS  = [0, 1290, 2080, 2770]
-const SAVING_AMTS = [0,  810, 1810, 2710]
+// Running totals as each item is added: [0 items, 1 item, 2 items, 3 items]
+const CTM_TOTALS    = [0, 1290, 2080, 2770]
+const RETAIL_TOTALS = [0, 2100, 3890, 5480]
 
 function CartUI() {
   const [count, setCount] = useState(0)
@@ -447,9 +447,9 @@ function CartUI() {
     return () => timers.forEach(clearTimeout)
   }, [inView])
 
-  const total  = CTM_TOTALS[count]
-  const saving = SAVING_AMTS[count]
-  const ease   = [0.25, 0.1, 0.25, 1] as const
+  const total       = CTM_TOTALS[count]
+  const retailTotal = RETAIL_TOTALS[count]
+  const ease        = [0.25, 0.1, 0.25, 1] as const
 
   return (
     <div ref={ref} className="flex flex-col h-full select-none overflow-hidden">
@@ -511,50 +511,68 @@ function CartUI() {
           </AnimatePresence>
         </div>
 
-        {/* Spacer pushes total to bottom */}
+        {/* Spacer */}
         <div className="flex-1" />
-
-        {/* Divider + running total */}
-        <div style={{ borderTop: '1px solid #F0F0F0', paddingTop: 10, paddingBottom: 12 }}>
-          <div className="flex items-center justify-between">
-            <span style={{ fontFamily: HN, fontSize: 11, fontWeight: 500, color: '#AAAAAA' }}>Order Total</span>
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={total}
-                style={{ fontFamily: HN, fontSize: 18, fontWeight: 700, letterSpacing: '-0.4px', color: total > 0 ? GREEN : '#DDDDDD' }}
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.22, ease }}
-              >
-                {total > 0 ? `₹${total.toLocaleString('en-IN')}` : '—'}
-              </motion.span>
-            </AnimatePresence>
-          </div>
-        </div>
 
       </div>
 
-      {/* ── Savings strip ── */}
-      <div className="flex items-center justify-between px-4" style={{ backgroundColor: GREEN, height: 58 }}>
-        <div>
-          <div style={{ fontFamily: HN, fontSize: 8, color: 'rgba(255,255,255,0.65)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 3 }}>
-            You&rsquo;re saving
+      {/* ── Combined total card — cream pill style ── */}
+      <div style={{ padding: '0 12px 14px' }}>
+
+        {/* Cream card */}
+        <div style={{
+          backgroundColor: '#F4EFE9',
+          borderRadius: 14,
+          padding: '11px 14px',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        }}>
+          <div>
+            <div style={{ fontFamily: HN, fontSize: 9, fontWeight: 600, color: '#AAAAAA', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 3 }}>
+              Eco-nic Fair
+            </div>
+            <div className="font-heading" style={{ fontSize: 20, color: '#111', lineHeight: 1.1 }}>
+              Cart Value
+            </div>
           </div>
+
+          {/* Green price badge — animates as total updates */}
           <AnimatePresence mode="wait">
             <motion.div
-              key={saving}
-              style={{ fontFamily: HN, fontSize: 23, fontWeight: 700, color: '#fff', letterSpacing: '-0.5px', lineHeight: 1 }}
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: saving > 0 ? 1 : 0.35, y: 0 }}
-              exit={{ opacity: 0, y: -3 }}
-              transition={{ duration: 0.25, ease }}
+              key={total}
+              style={{
+                backgroundColor: total > 0 ? GREEN : '#E8E8E8',
+                borderRadius: 10, padding: '9px 14px',
+                fontFamily: HN, fontSize: 19, fontWeight: 700, color: total > 0 ? '#fff' : '#CCCCCC',
+                letterSpacing: '-0.4px', lineHeight: 1,
+                boxShadow: total > 0 ? 'inset 0 -2px 0 rgba(0,0,0,0.16)' : 'none',
+              }}
+              initial={{ opacity: 0, scale: 0.90 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.94 }}
+              transition={{ type: 'spring', stiffness: 360, damping: 26 }}
             >
-              {saving > 0 ? `₹${saving.toLocaleString('en-IN')}` : '₹0'}
+              {total > 0 ? `₹${total.toLocaleString('en-IN')}` : '—'}
             </motion.div>
           </AnimatePresence>
         </div>
-        <EcoNicLogo dark={false} />
+
+        {/* Today's retail price — grey line below card */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={retailTotal}
+            style={{ textAlign: 'center', marginTop: 8, fontFamily: HN, fontSize: 10.5, color: '#BBBBBB' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, ease }}
+          >
+            Today&rsquo;s Cart Value:{' '}
+            <span style={{ color: '#999' }}>
+              {retailTotal > 0 ? `₹${retailTotal.toLocaleString('en-IN')}` : '—'}
+            </span>
+          </motion.div>
+        </AnimatePresence>
+
       </div>
 
     </div>
