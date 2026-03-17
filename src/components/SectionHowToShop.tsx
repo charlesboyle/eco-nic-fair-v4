@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence, useInView } from 'motion/react'
+import { motion, AnimatePresence, useInView, useMotionValue, useTransform, animate } from 'motion/react'
 
 const AMBER = '#F18C22'
 const GREEN = '#019248'
@@ -423,47 +423,62 @@ const CART_ITEMS_DATA = [
   { name: 'Sadia',  ctm: 790  },
   { name: 'Feiza',  ctm: 690  },
 ]
-// Running totals as each item is added: [0 items, 1 item, 2 items, 3 items]
-const CTM_TOTALS    = [0, 1290, 2080, 2770]
-const RETAIL_TOTALS = [0, 2100, 3890, 5480]
+// Running totals as each item is added: [0, 1, 2, 3 items]
+const CTM_TOTALS = [0, 1290, 2080, 2770]
 
 function CartUI() {
   const [count, setCount] = useState(0)
   const ref    = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: false, margin: '-40px' })
 
-  // Items appear one-by-one, total updates, then resets
+  // MotionValue for smooth continuous rolling number — never pops or resets visibly
+  const displayTotal = useMotionValue(0)
+  const totalText    = useTransform(displayTotal, (v: number) =>
+    v > 2 ? `₹${Math.round(v).toLocaleString('en-IN')}` : '—'
+  )
+
+  const ease = [0.25, 0.1, 0.25, 1] as const
+
+  // Roll total smoothly when count changes
+  useEffect(() => {
+    if (count === 0) {
+      displayTotal.set(0) // instant snap-back on reset, then items re-appear
+      return
+    }
+    animate(displayTotal, CTM_TOTALS[count], {
+      duration: 0.55,
+      ease: [0.25, 0.1, 0.25, 1],
+    })
+  }, [count, displayTotal])
+
+  // Items appear one-by-one, then loop
   useEffect(() => {
     if (!inView) return
     const timers: ReturnType<typeof setTimeout>[] = []
     const run = () => {
       setCount(0)
       timers.push(setTimeout(() => setCount(1), 500))
-      timers.push(setTimeout(() => setCount(2), 2000))
-      timers.push(setTimeout(() => setCount(3), 3500))
-      timers.push(setTimeout(run, 6800))
+      timers.push(setTimeout(() => setCount(2), 2100))
+      timers.push(setTimeout(() => setCount(3), 3600))
+      timers.push(setTimeout(run, 6600))
     }
     run()
     return () => timers.forEach(clearTimeout)
   }, [inView])
 
-  const total       = CTM_TOTALS[count]
-  const retailTotal = RETAIL_TOTALS[count]
-  const ease        = [0.25, 0.1, 0.25, 1] as const
-
   return (
     <div ref={ref} className="flex flex-col h-full select-none overflow-hidden">
 
       {/* ── Items area ── */}
-      <div className="flex-1 flex flex-col px-4 pt-4 pb-0" style={{ minHeight: 0 }}>
+      <div className="flex-1 flex flex-col px-4 pt-4" style={{ minHeight: 0 }}>
 
         {/* Header */}
-        <div style={{ fontFamily: HN, fontSize: 8, fontWeight: 600, color: '#C8C8C8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>
+        <div style={{ fontFamily: HN, fontSize: 8, fontWeight: 600, color: '#C8C8C8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12 }}>
           My Cart{count > 0 ? ` · ${count} item${count > 1 ? 's' : ''}` : ''}
         </div>
 
-        {/* Items — slide in as count increases */}
-        <div className="flex flex-col gap-2.5">
+        {/* Item rows — slide in as count increases */}
+        <div className="flex flex-col gap-3">
           <AnimatePresence>
             {CART_ITEMS_DATA.slice(0, count).map((item, i) => (
               <motion.div
@@ -471,24 +486,24 @@ function CartUI() {
                 className="flex items-center gap-3"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.30, ease }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.28, ease }}
               >
-                {/* Thumbnail skeleton */}
-                <div style={{ width: 36, height: 44, borderRadius: 6, backgroundColor: '#ECECEC', flexShrink: 0 }} />
+                {/* Skeleton thumbnail */}
+                <div style={{ width: 38, height: 46, borderRadius: 7, backgroundColor: '#EBEBEB', flexShrink: 0 }} />
 
-                {/* Info */}
+                {/* Name + size/qty chips */}
                 <div className="flex-1 min-w-0 flex flex-col gap-1.5">
-                  <div style={{ fontFamily: HN, fontSize: 11, fontWeight: 500, color: '#222', lineHeight: 1 }}>
+                  <div style={{ fontFamily: HN, fontSize: 11, fontWeight: 500, color: '#1A1A1A', lineHeight: 1 }}>
                     {item.name}
                   </div>
-                  {/* Size + qty skeleton chips */}
                   <div className="flex gap-1.5">
-                    {/* Size pill */}
+                    {/* Size skeleton pill */}
                     <div style={{ height: 17, padding: '0 7px', borderRadius: 4, border: '1px solid #EBEBEB', display: 'flex', alignItems: 'center', gap: 3 }}>
                       <div style={{ width: 16, height: 5, borderRadius: 2, backgroundColor: '#E8E8E8' }} />
                       <div style={{ width: 7,  height: 5, borderRadius: 2, backgroundColor: '#D8D8D8' }} />
                     </div>
-                    {/* Qty stepper */}
+                    {/* Qty stepper skeleton */}
                     <div style={{ height: 17, padding: '0 5px', borderRadius: 4, border: '1px solid #EBEBEB', display: 'flex', alignItems: 'center', gap: 4 }}>
                       <div style={{ width: 5, height: 5, borderRadius: 99, backgroundColor: '#E0E0E0' }} />
                       <div style={{ width: 7, height: 5, borderRadius: 2,  backgroundColor: '#D8D8D8' }} />
@@ -499,7 +514,7 @@ function CartUI() {
 
                 {/* Eco-nic price badge */}
                 <div style={{
-                  backgroundColor: GREEN, borderRadius: 6, padding: '3px 8px',
+                  backgroundColor: GREEN, borderRadius: 6, padding: '4px 9px',
                   fontFamily: HN, fontSize: 12, fontWeight: 600, color: '#fff',
                   letterSpacing: '-0.2px', flexShrink: 0,
                   boxShadow: 'inset 0 -1.5px 0 rgba(0,0,0,0.14)',
@@ -511,13 +526,13 @@ function CartUI() {
           </AnimatePresence>
         </div>
 
-        {/* Spacer */}
+        {/* Spacer — pushes total card to bottom */}
         <div className="flex-1" />
 
       </div>
 
-      {/* ── Combined total card — cream pill style ── */}
-      <div style={{ padding: '0 12px 14px' }}>
+      {/* ── Total card — always on screen, number rolls continuously ── */}
+      <div style={{ padding: '0 10px 12px' }}>
 
         {/* Cream card */}
         <div style={{
@@ -527,51 +542,33 @@ function CartUI() {
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         }}>
           <div>
-            <div style={{ fontFamily: HN, fontSize: 9, fontWeight: 600, color: '#AAAAAA', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 3 }}>
+            <div style={{ fontFamily: HN, fontSize: 9, fontWeight: 600, color: '#BBBBBB', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 3 }}>
               Eco-nic Fair
             </div>
-            <div className="font-heading" style={{ fontSize: 20, color: '#111', lineHeight: 1.1 }}>
+            <div className="font-heading" style={{ fontSize: 19, color: '#111', lineHeight: 1.1 }}>
               Cart Value
             </div>
           </div>
 
-          {/* Green price badge — animates as total updates */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={total}
-              style={{
-                backgroundColor: total > 0 ? GREEN : '#E8E8E8',
-                borderRadius: 10, padding: '9px 14px',
-                fontFamily: HN, fontSize: 19, fontWeight: 700, color: total > 0 ? '#fff' : '#CCCCCC',
-                letterSpacing: '-0.4px', lineHeight: 1,
-                boxShadow: total > 0 ? 'inset 0 -2px 0 rgba(0,0,0,0.16)' : 'none',
-              }}
-              initial={{ opacity: 0, scale: 0.90 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.94 }}
-              transition={{ type: 'spring', stiffness: 360, damping: 26 }}
-            >
-              {total > 0 ? `₹${total.toLocaleString('en-IN')}` : '—'}
-            </motion.div>
-          </AnimatePresence>
+          {/* Rolling price badge — colour transitions, number rolls via MotionValue */}
+          <motion.div
+            style={{ borderRadius: 10, padding: '8px 14px', fontFamily: HN, fontSize: 20, fontWeight: 700, letterSpacing: '-0.5px', lineHeight: 1 }}
+            animate={{
+              backgroundColor: count > 0 ? GREEN : '#E4E4E4',
+              color:           count > 0 ? '#ffffff' : '#C4C4C4',
+              boxShadow:       count > 0 ? 'inset 0 -2px 0 rgba(0,0,0,0.16)' : 'none',
+            }}
+            transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            <motion.span className="tabular-nums">{totalText}</motion.span>
+          </motion.div>
         </div>
 
-        {/* Today's retail price — grey line below card */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={retailTotal}
-            style={{ textAlign: 'center', marginTop: 8, fontFamily: HN, fontSize: 10.5, color: '#BBBBBB' }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2, ease }}
-          >
-            Today&rsquo;s Cart Value:{' '}
-            <span style={{ color: '#999' }}>
-              {retailTotal > 0 ? `₹${retailTotal.toLocaleString('en-IN')}` : '—'}
-            </span>
-          </motion.div>
-        </AnimatePresence>
+        {/* Retail comparison — static, shows savings potential */}
+        <div style={{ textAlign: 'center', marginTop: 7, fontFamily: HN, fontSize: 10.5, color: '#BBBBBB' }}>
+          Today&rsquo;s Cart Value:{' '}
+          <span style={{ color: '#AAAAAA', textDecoration: 'line-through' }}>₹5,480</span>
+        </div>
 
       </div>
 
