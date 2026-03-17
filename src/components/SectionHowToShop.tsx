@@ -317,19 +317,19 @@ function CostBreakdownUI() {
                   >
                     {/* Name + desc — same line, weight contrast */}
                     <div style={{ fontFamily: HN, fontSize: 12.5, lineHeight: 1.3 }}>
-                      <span style={{ fontWeight: 600, color: '#111' }}>{p.name}</span>
-                      <span style={{ fontWeight: 400, color: '#999', marginLeft: 5 }}>{p.desc}</span>
+                      <span style={{ fontWeight: 500, color: '#111' }}>{p.name}</span>
+                      <span style={{ fontWeight: 400, color: '#666', marginLeft: 5 }}>{p.desc}</span>
                     </div>
 
                     {/* MRP — contrasted strikethrough */}
-                    <div style={{ fontFamily: HN, fontSize: 12, fontWeight: 500, color: '#777', marginTop: 8, textDecoration: 'line-through', letterSpacing: '-0.2px' }}>
+                    <div style={{ fontFamily: HN, fontSize: 12, fontWeight: 500, color: '#555', marginTop: 8, textDecoration: 'line-through', letterSpacing: '-0.2px' }}>
                       ₹{p.mrp.toLocaleString('en-IN')}
                     </div>
 
                     {/* CTM price + savings badge */}
                     <div className="flex items-center justify-between" style={{ marginTop: 2 }}>
                       <motion.div
-                        style={{ fontFamily: HN, fontSize: 30, fontWeight: 600, color: GREEN, letterSpacing: '-1px', lineHeight: 1 }}
+                        style={{ fontFamily: HN, fontSize: 22, fontWeight: 600, color: GREEN, letterSpacing: '-0.5px', lineHeight: 1 }}
                         initial={{ scale: 0.88, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.92, opacity: 0 }}
@@ -402,141 +402,200 @@ function CostBreakdownUI() {
   )
 }
 
-/* ─── Card 3: Cart Builder ─── */
+/* ─── Card 3: Cart ─── */
 
 const CART_ITEMS = [
-  { name: 'Linen Wrap Dress', size: 'M', retail: 3490, cost: 970 },
-  { name: 'Organic Cotton Top', size: 'S', retail: 1290, cost: 420 },
-  { name: 'Tencel Midi Skirt', size: 'L', retail: 2190, cost: 680 },
+  { name: 'Astrid', desc: '100% Cotton Squareneck Mini', size: 'L', retail: 2100, ctm: 1290 },
+  { name: 'Sadia',  desc: 'Butterfly Sleeve Cotton Dress', size: 'M', retail: 1790, ctm: 790 },
+  { name: 'Feiza',  desc: 'Linen Mandarin Collar Shirt',  size: 'S', retail: 1590, ctm: 690 },
 ]
+const CART_TOTAL_RETAIL = CART_ITEMS.reduce((s, i) => s + i.retail, 0)
+const CART_TOTAL_CTM    = CART_ITEMS.reduce((s, i) => s + i.ctm,   0)
+const CART_SAVING       = CART_TOTAL_RETAIL - CART_TOTAL_CTM
+
+const START_SECS = 2 * 3600 + 34 * 60 + 12
+function fmtRupee(n: number) { return '₹' + n.toLocaleString('en-IN') }
+function fmtTime(s: number) {
+  const h = Math.floor(s / 3600)
+  const m = Math.floor((s % 3600) / 60)
+  const sec = s % 60
+  return `${h}H ${String(m).padStart(2, '0')}M ${String(sec).padStart(2, '0')}S`
+}
 
 function CartUI() {
-  const [visibleCount, setVisibleCount] = useState(0)
-  const ref = useRef<HTMLDivElement>(null)
+  // isFair: false = show retail prices, true = fair prices stamped in
+  const [isFair, setIsFair] = useState(false)
+  const [secs,   setSecs]   = useState(START_SECS)
+  const ref    = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: false, margin: '-40px' })
 
+  // Cycle: retail (2s) → fair (3s) → retail → …
   useEffect(() => {
     if (!inView) return
-    setVisibleCount(0)
-    let step = 0
-    const addItem = setInterval(() => {
-      step += 1
-      setVisibleCount(step)
-      if (step >= CART_ITEMS.length) {
-        clearInterval(addItem)
-        setTimeout(() => setVisibleCount(0), 2000)
-      }
-    }, 700)
-    return () => clearInterval(addItem)
+    setIsFair(false)
+    let t1: ReturnType<typeof setTimeout>
+    let t2: ReturnType<typeof setTimeout>
+    const run = () => {
+      t1 = setTimeout(() => setIsFair(true),  2000)
+      t2 = setTimeout(() => setIsFair(false), 5200)
+    }
+    run()
+    const id = setInterval(run, 5600)
+    return () => { clearTimeout(t1); clearTimeout(t2); clearInterval(id) }
   }, [inView])
 
-  const shown = CART_ITEMS.slice(0, visibleCount)
-  const totalCost = shown.reduce((s, it) => s + it.cost, 0)
-  const totalRetail = shown.reduce((s, it) => s + it.retail, 0)
-  const fmt = (n: number) => '₹' + n.toLocaleString('en-IN')
+  useEffect(() => {
+    const id = setInterval(() => setSecs(s => (s > 0 ? s - 1 : START_SECS)), 1000)
+    return () => clearInterval(id)
+  }, [])
+
+  const ease = [0.25, 0.1, 0.25, 1] as const
 
   return (
-    <div ref={ref} className="p-4 flex flex-col" style={{ height: '100%' }}>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-3">
-        <span
-          className="text-neutral-400 uppercase"
-          style={{ fontFamily: 'Helvetica Neue, Helvetica, sans-serif', fontSize: '10px', letterSpacing: '0.06em' }}
-        >
-          My Cart
-        </span>
-        <motion.span
-          key={visibleCount}
-          initial={{ scale: 0.85, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="rounded-full px-2 py-0.5"
-          style={{
-            fontFamily: 'Helvetica Neue, Helvetica, sans-serif',
-            fontSize: '9px',
-            backgroundColor: visibleCount > 0 ? AMBER : '#E5E7EB',
-            color: visibleCount > 0 ? 'white' : '#9CA3AF',
-          }}
-        >
-          {visibleCount} item{visibleCount !== 1 ? 's' : ''}
-        </motion.span>
-      </div>
+    <div ref={ref} className="flex flex-col h-full select-none overflow-hidden">
 
-      {/* Items — always 3 rows, opacity-only */}
-      <div className="space-y-0 flex-1">
-        {CART_ITEMS.map((item, i) => (
-          <motion.div
-            key={item.name}
-            className="flex items-center gap-2.5 py-2 border-b border-neutral-100 last:border-0"
-            animate={{ opacity: i < visibleCount ? 1 : 0, x: i < visibleCount ? 0 : 6 }}
-            transition={{ duration: 0.22 }}
-          >
-            <div className="w-6 h-8 rounded bg-neutral-100 flex-shrink-0" />
-            <div className="flex-1 min-w-0">
-              <span
-                className="text-neutral-600 truncate block"
-                style={{ fontFamily: 'Helvetica Neue, Helvetica, sans-serif', fontSize: '9.5px' }}
-              >
-                {item.name}
-              </span>
-              <span
-                className="text-neutral-400"
-                style={{ fontFamily: 'Helvetica Neue, Helvetica, sans-serif', fontSize: '8.5px' }}
-              >
-                {item.size}
-              </span>
-            </div>
-            <span
-              className="font-bold flex-shrink-0"
-              style={{ fontFamily: 'Helvetica Neue, Helvetica, sans-serif', fontSize: '12px', color: AMBER }}
+      {/* ── Cart rows ── */}
+      <div className="flex-1 px-4 pt-3 flex flex-col justify-center">
+
+        {/* header */}
+        <div className="flex justify-between items-center mb-2">
+          <span style={{ fontFamily: HN, fontSize: 9, fontWeight: 600, color: '#BBB', letterSpacing: '0.07em', textTransform: 'uppercase' }}>
+            My Cart
+          </span>
+          <span style={{ fontFamily: HN, fontSize: 8.5, fontWeight: 600, borderRadius: 99, padding: '2px 8px', backgroundColor: '#EBEBEB', color: '#888' }}>
+            3 items
+          </span>
+        </div>
+
+        {/* item rows — layout is always 3 rows, only prices transform */}
+        {CART_ITEMS.map((item, i) => {
+          const rowDelay = i * 0.09
+          return (
+            <div
+              key={item.name}
+              className="flex items-center gap-2.5"
+              style={{ paddingTop: 5, paddingBottom: 5, borderBottom: '1px solid #F2F2F2' }}
             >
-              {fmt(item.cost)}
-            </span>
-          </motion.div>
-        ))}
-      </div>
+              {/* thumbnail */}
+              <div style={{ width: 32, height: 38, borderRadius: 6, backgroundColor: '#EBEBEB', flexShrink: 0 }} />
 
-      {/* Total — opacity only, no layout shift */}
-      <motion.div
-        className="border-t border-neutral-200 pt-2.5 mt-1 space-y-1"
-        animate={{ opacity: visibleCount > 0 ? 1 : 0 }}
-        transition={{ duration: 0.2 }}
-      >
-        <div className="flex justify-between items-center">
-          <span
-            className="text-neutral-400"
-            style={{ fontFamily: 'Helvetica Neue, Helvetica, sans-serif', fontSize: '10px' }}
-          >
-            You pay
+              {/* info */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontFamily: HN, fontSize: 10, fontWeight: 500, color: '#111', lineHeight: 1.2 }}>
+                  {item.name}
+                </div>
+                <div style={{ fontFamily: HN, fontSize: 8, color: '#AAA', marginTop: 1 }}>
+                  {item.desc} · {item.size}
+                </div>
+              </div>
+
+              {/* price column — retail fades/strikes, fair badge stamps in */}
+              <div style={{ flexShrink: 0, textAlign: 'right', position: 'relative', minWidth: 56 }}>
+                {/* retail price */}
+                <motion.div
+                  style={{ fontFamily: HN, fontSize: 11, fontWeight: 500 }}
+                  animate={{
+                    color:          isFair ? '#CCC' : '#444',
+                    textDecoration: isFair ? 'line-through' : 'none',
+                  }}
+                  transition={{ duration: 0.28, ease, delay: isFair ? rowDelay : 0 }}
+                >
+                  {fmtRupee(item.retail)}
+                </motion.div>
+
+                {/* fair price badge — scaleX stamp from right */}
+                <motion.div
+                  style={{
+                    position: 'absolute', right: 0, top: 0,
+                    backgroundColor: GREEN,
+                    borderRadius: 6,
+                    padding: '2px 7px',
+                    boxShadow: 'inset 0 -1.5px 0 rgba(0,0,0,0.18)',
+                    fontFamily: HN, fontSize: 11, fontWeight: 600, color: '#fff',
+                    letterSpacing: '-0.1px',
+                    originX: 1, originY: 0.5,
+                    whiteSpace: 'nowrap',
+                  }}
+                  animate={{ scaleX: isFair ? 1 : 0, opacity: isFair ? 1 : 0 }}
+                  transition={{
+                    type: 'spring', stiffness: 380, damping: 28,
+                    opacity: { duration: 0.1 },
+                    delay: isFair ? rowDelay + 0.06 : 0,
+                  }}
+                >
+                  {fmtRupee(item.ctm)}
+                </motion.div>
+              </div>
+            </div>
+          )
+        })}
+
+        {/* total row */}
+        <div className="flex justify-between items-center" style={{ paddingTop: 6, marginTop: 1 }}>
+          <span style={{ fontFamily: HN, fontSize: 9, fontWeight: 600, color: '#AAA', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+            Total
           </span>
           <div className="flex items-center gap-2">
-            <span
-              className="text-neutral-400 line-through"
-              style={{ fontFamily: 'Helvetica Neue, Helvetica, sans-serif', fontSize: '9px' }}
+            <motion.span
+              style={{ fontFamily: HN, fontSize: 11, fontWeight: 500 }}
+              animate={{ color: isFair ? '#CCC' : '#444', textDecoration: isFair ? 'line-through' : 'none' }}
+              transition={{ duration: 0.28, ease, delay: isFair ? 0.28 : 0 }}
             >
-              {fmt(totalRetail)}
-            </span>
-            <span
-              className="font-bold"
-              style={{ fontFamily: 'Helvetica Neue, Helvetica, sans-serif', fontSize: '13px', color: AMBER }}
+              {fmtRupee(CART_TOTAL_RETAIL)}
+            </motion.span>
+            <motion.span
+              style={{
+                backgroundColor: GREEN, borderRadius: 7, padding: '3px 9px',
+                boxShadow: 'inset 0 -1.5px 0 rgba(0,0,0,0.18)',
+                fontFamily: HN, fontSize: 11, fontWeight: 600, color: '#fff',
+                originX: 1, originY: 0.5,
+              }}
+              animate={{ scaleX: isFair ? 1 : 0, opacity: isFair ? 1 : 0 }}
+              transition={{
+                type: 'spring', stiffness: 340, damping: 26,
+                opacity: { duration: 0.1 },
+                delay: isFair ? 0.34 : 0,
+              }}
             >
-              {fmt(totalCost)}
-            </span>
+              {fmtRupee(CART_TOTAL_CTM)}
+            </motion.span>
           </div>
         </div>
-        <div className="flex justify-end">
-          <span
-            className="rounded px-1.5 py-0.5"
-            style={{
-              fontFamily: 'Helvetica Neue, Helvetica, sans-serif',
-              fontSize: '9px',
-              backgroundColor: '#F0FDF4',
-              color: GREEN,
-            }}
-          >
-            you save {fmt(totalRetail - totalCost)}
+      </div>
+
+      {/* ── Savings + countdown — slides up when fair ── */}
+      <motion.div
+        animate={{ opacity: isFair ? 1 : 0, y: isFair ? 0 : 10 }}
+        transition={{ duration: 0.38, ease, delay: isFair ? 0.44 : 0 }}
+      >
+        {/* green savings strip */}
+        <div className="flex items-center justify-between px-4 py-2" style={{ backgroundColor: GREEN }}>
+          <span style={{ fontFamily: HN, fontSize: 10, color: 'rgba(255,255,255,0.82)' }}>
+            You&rsquo;re saving{' '}
+            <span style={{ fontWeight: 600, color: '#fff', fontSize: 11 }}>{fmtRupee(CART_SAVING)}</span>
           </span>
+          <EcoNicLogo dark={false} />
+        </div>
+        {/* dark countdown */}
+        <div className="flex items-center justify-between px-4 py-2" style={{ backgroundColor: '#111' }}>
+          <div>
+            <div style={{ fontFamily: HN, fontSize: 7, color: 'rgba(255,255,255,0.38)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+              Fair starts soon
+            </div>
+            <div style={{ fontFamily: HN, fontSize: 11.5, fontWeight: 600, color: '#fff', letterSpacing: '0.04em', marginTop: 1 }}>
+              {fmtTime(secs)}
+            </div>
+          </div>
+          <div style={{
+            backgroundColor: '#fff', borderRadius: 7, padding: '5px 12px',
+            fontFamily: HN, fontSize: 8.5, fontWeight: 600, color: '#111',
+            letterSpacing: '0.04em', textTransform: 'uppercase',
+          }}>
+            Shop in App
+          </div>
         </div>
       </motion.div>
+
     </div>
   )
 }
@@ -613,6 +672,7 @@ export default function SectionHowToShop() {
           scrollPaddingLeft: '1.5rem',
           WebkitOverflowScrolling: 'touch',
           scrollbarWidth: 'none',
+          overflowY: 'hidden',
         }}
       >
         {CARDS.map((card, i) => {

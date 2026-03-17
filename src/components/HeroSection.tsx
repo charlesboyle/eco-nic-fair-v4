@@ -33,7 +33,7 @@ export default function HeroSection() {
       <div className="relative z-20 flex justify-center mb-4">
         {/* The White Background Capsule */}
         <motion.div
-          className="absolute top-0 w-[196px] h-full bg-white rounded-b-[16px] z-10 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.10)]"
+          className="absolute top-0 w-[148px] md:w-[196px] h-full bg-white rounded-b-[16px] z-10 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.10)]"
           initial={{ opacity: 0, scaleY: 0.8 }}
           animate={{ opacity: 1, scaleY: 1 }}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
@@ -52,7 +52,8 @@ export default function HeroSection() {
             alt="Éco-nic"
             width={170}
             height={200}
-            style={{ width: 170, height: 'auto' }}
+            className="w-[126px] md:w-[170px]"
+            style={{ height: 'auto' }}
             priority
           />
         </motion.div>
@@ -76,7 +77,7 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, delay: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
         >
-          India&apos;s first <span className="whitespace-nowrap">Cost-to-Make</span> Fair is back
+          India&apos;s first <span className="whitespace-nowrap">Cost-to-Make</span> <span className="whitespace-nowrap">Fair is back</span>
           <br />
           <span className="font-heading" style={{ fontSize: 'clamp(18px, 3.2vw, 30px)', opacity: 0.45 }}>AND IT&apos;S BIGGER THAN EVER</span>
         </motion.h1>
