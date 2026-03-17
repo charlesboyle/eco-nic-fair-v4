@@ -418,114 +418,141 @@ function CostBreakdownUI() {
 
 /* ─── Card 3: Cart ─── */
 
-// 3 skeleton items with staggered bar widths for realism
-const SKELETON_ITEMS = [
-  { w1: 88, w2: 56, priceW: 38 },
-  { w1: 72, w2: 64, priceW: 32 },
-  { w1: 96, w2: 48, priceW: 36 },
+const CART_ITEMS_DATA = [
+  { name: 'Astrid', ctm: 1290 },
+  { name: 'Sadia',  ctm: 790  },
+  { name: 'Feiza',  ctm: 690  },
 ]
+// Running eco-nic totals as each item is added
+const CTM_TOTALS  = [0, 1290, 2080, 2770]
+const SAVING_AMTS = [0,  810, 1810, 2710]
 
 function CartUI() {
-  const [isFair, setIsFair] = useState(false)
+  const [count, setCount] = useState(0)
   const ref    = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: false, margin: '-40px' })
 
-  // Loop: retail total visible → fair price stamps in → resets
+  // Items appear one-by-one, total updates, then resets
   useEffect(() => {
     if (!inView) return
-    let t1: ReturnType<typeof setTimeout>
-    let t2: ReturnType<typeof setTimeout>
-    const cycle = () => {
-      setIsFair(false)
-      t1 = setTimeout(() => setIsFair(true), 1800)
-      t2 = setTimeout(cycle, 5400)
+    const timers: ReturnType<typeof setTimeout>[] = []
+    const run = () => {
+      setCount(0)
+      timers.push(setTimeout(() => setCount(1), 500))
+      timers.push(setTimeout(() => setCount(2), 2000))
+      timers.push(setTimeout(() => setCount(3), 3500))
+      timers.push(setTimeout(run, 6800))
     }
-    cycle()
-    return () => { clearTimeout(t1); clearTimeout(t2) }
+    run()
+    return () => timers.forEach(clearTimeout)
   }, [inView])
 
-  const ease = [0.25, 0.1, 0.25, 1] as const
+  const total  = CTM_TOTALS[count]
+  const saving = SAVING_AMTS[count]
+  const ease   = [0.25, 0.1, 0.25, 1] as const
 
   return (
     <div ref={ref} className="flex flex-col h-full select-none overflow-hidden">
 
-      {/* ── Item area ── */}
-      <div className="flex-1 flex flex-col px-5 pt-4 pb-3">
+      {/* ── Items area ── */}
+      <div className="flex-1 flex flex-col px-4 pt-4 pb-0" style={{ minHeight: 0 }}>
 
         {/* Header */}
-        <div style={{ fontFamily: HN, fontSize: 8, fontWeight: 600, color: '#C4C4C4', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 14 }}>
-          My Cart &middot; 3 items
+        <div style={{ fontFamily: HN, fontSize: 8, fontWeight: 600, color: '#C8C8C8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>
+          My Cart{count > 0 ? ` · ${count} item${count > 1 ? 's' : ''}` : ''}
         </div>
 
-        {/* 3 skeleton items — flex-1 distributes space evenly */}
-        <div className="flex-1 flex flex-col justify-around">
-          {SKELETON_ITEMS.map((item, i) => (
-            <div key={i} className="flex items-center gap-3">
-              {/* thumbnail */}
-              <div style={{ width: 38, height: 46, borderRadius: 6, backgroundColor: '#ECECEC', flexShrink: 0 }} />
-              {/* text bars */}
-              <div className="flex-1 flex flex-col gap-1.5">
-                <div style={{ height: 8, width: item.w1, borderRadius: 3, backgroundColor: '#E8E8E8' }} />
-                <div style={{ height: 7, width: item.w2, borderRadius: 3, backgroundColor: '#F0F0F0' }} />
-              </div>
-              {/* price bar */}
-              <div style={{ height: 8, width: item.priceW, borderRadius: 3, backgroundColor: '#EBEBEB', flexShrink: 0 }} />
-            </div>
-          ))}
-        </div>
-
-        {/* Divider + animated order total */}
-        <div style={{ borderTop: '1px solid #F0F0F0', paddingTop: 12, marginTop: 12 }}>
-          <div className="flex items-center justify-between">
-            <span style={{ fontFamily: HN, fontSize: 11, fontWeight: 500, color: '#AAAAAA' }}>Order Total</span>
-
-            {/* Retail price — fades + strikes when fair price stamps */}
-            <div className="relative flex items-center justify-end" style={{ minWidth: 100 }}>
+        {/* Items — slide in as count increases */}
+        <div className="flex flex-col gap-2.5">
+          <AnimatePresence>
+            {CART_ITEMS_DATA.slice(0, count).map((item, i) => (
               <motion.div
-                style={{ fontFamily: HN, fontSize: 19, fontWeight: 600, letterSpacing: '-0.4px' }}
-                animate={{ color: isFair ? '#CCCCCC' : '#111111', textDecoration: isFair ? 'line-through' : 'none' }}
-                transition={{ duration: 0.25, ease }}
+                key={i}
+                className="flex items-center gap-3"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.30, ease }}
               >
-                ₹5,480
-              </motion.div>
+                {/* Thumbnail skeleton */}
+                <div style={{ width: 36, height: 44, borderRadius: 6, backgroundColor: '#ECECEC', flexShrink: 0 }} />
 
-              {/* Green pill stamps over it */}
-              <motion.div
-                className="absolute inset-0 flex items-center justify-end"
-                animate={{ opacity: isFair ? 1 : 0 }}
-                transition={{ opacity: { duration: 0.12 } }}
-              >
-                <div className="relative overflow-hidden" style={{ borderRadius: 8 }}>
-                  <motion.div
-                    className="absolute inset-0"
-                    style={{ backgroundColor: GREEN, originX: 0, originY: 0.5, boxShadow: 'inset 0 -2px 0 rgba(0,0,0,0.18)' }}
-                    animate={{ scaleX: isFair ? 1 : 0 }}
-                    transition={{ type: 'spring', stiffness: 360, damping: 26 }}
-                  />
-                  <div style={{ position: 'relative', zIndex: 1, fontFamily: HN, fontSize: 19, fontWeight: 600, color: '#fff', padding: '5px 12px', letterSpacing: '-0.4px' }}>
-                    ₹2,770
+                {/* Info */}
+                <div className="flex-1 min-w-0 flex flex-col gap-1.5">
+                  <div style={{ fontFamily: HN, fontSize: 11, fontWeight: 500, color: '#222', lineHeight: 1 }}>
+                    {item.name}
+                  </div>
+                  {/* Size + qty skeleton chips */}
+                  <div className="flex gap-1.5">
+                    {/* Size pill */}
+                    <div style={{ height: 17, padding: '0 7px', borderRadius: 4, border: '1px solid #EBEBEB', display: 'flex', alignItems: 'center', gap: 3 }}>
+                      <div style={{ width: 16, height: 5, borderRadius: 2, backgroundColor: '#E8E8E8' }} />
+                      <div style={{ width: 7,  height: 5, borderRadius: 2, backgroundColor: '#D8D8D8' }} />
+                    </div>
+                    {/* Qty stepper */}
+                    <div style={{ height: 17, padding: '0 5px', borderRadius: 4, border: '1px solid #EBEBEB', display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <div style={{ width: 5, height: 5, borderRadius: 99, backgroundColor: '#E0E0E0' }} />
+                      <div style={{ width: 7, height: 5, borderRadius: 2,  backgroundColor: '#D8D8D8' }} />
+                      <div style={{ width: 5, height: 5, borderRadius: 99, backgroundColor: '#E0E0E0' }} />
+                    </div>
                   </div>
                 </div>
+
+                {/* Eco-nic price badge */}
+                <div style={{
+                  backgroundColor: GREEN, borderRadius: 6, padding: '3px 8px',
+                  fontFamily: HN, fontSize: 12, fontWeight: 600, color: '#fff',
+                  letterSpacing: '-0.2px', flexShrink: 0,
+                  boxShadow: 'inset 0 -1.5px 0 rgba(0,0,0,0.14)',
+                }}>
+                  ₹{item.ctm.toLocaleString('en-IN')}
+                </div>
               </motion.div>
-            </div>
+            ))}
+          </AnimatePresence>
+        </div>
+
+        {/* Spacer pushes total to bottom */}
+        <div className="flex-1" />
+
+        {/* Divider + running total */}
+        <div style={{ borderTop: '1px solid #F0F0F0', paddingTop: 10, paddingBottom: 12 }}>
+          <div className="flex items-center justify-between">
+            <span style={{ fontFamily: HN, fontSize: 11, fontWeight: 500, color: '#AAAAAA' }}>Order Total</span>
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={total}
+                style={{ fontFamily: HN, fontSize: 18, fontWeight: 700, letterSpacing: '-0.4px', color: total > 0 ? GREEN : '#DDDDDD' }}
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.22, ease }}
+              >
+                {total > 0 ? `₹${total.toLocaleString('en-IN')}` : '—'}
+              </motion.span>
+            </AnimatePresence>
           </div>
         </div>
 
       </div>
 
-      {/* ── Savings strip — prominent green bar ── */}
-      <div className="flex items-center justify-between px-5" style={{ backgroundColor: GREEN, height: 62 }}>
+      {/* ── Savings strip ── */}
+      <div className="flex items-center justify-between px-4" style={{ backgroundColor: GREEN, height: 58 }}>
         <div>
-          <div style={{ fontFamily: HN, fontSize: 8.5, color: 'rgba(255,255,255,0.70)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 3 }}>
+          <div style={{ fontFamily: HN, fontSize: 8, color: 'rgba(255,255,255,0.65)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 3 }}>
             You&rsquo;re saving
           </div>
-          <motion.div
-            style={{ fontFamily: HN, fontSize: 26, fontWeight: 700, color: '#fff', letterSpacing: '-0.6px', lineHeight: 1 }}
-            animate={{ opacity: isFair ? 1 : 0.45 }}
-            transition={{ duration: 0.4 }}
-          >
-            ₹2,710
-          </motion.div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={saving}
+              style={{ fontFamily: HN, fontSize: 23, fontWeight: 700, color: '#fff', letterSpacing: '-0.5px', lineHeight: 1 }}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: saving > 0 ? 1 : 0.35, y: 0 }}
+              exit={{ opacity: 0, y: -3 }}
+              transition={{ duration: 0.25, ease }}
+            >
+              {saving > 0 ? `₹${saving.toLocaleString('en-IN')}` : '₹0'}
+            </motion.div>
+          </AnimatePresence>
         </div>
         <EcoNicLogo dark={false} />
       </div>
@@ -539,9 +566,9 @@ function CartUI() {
 const CARDS = [
   {
     ui: 'toggle' as const,
-    title: 'Preview Éco-nic prices',
+    title: 'Preview Eco-nic prices',
     description:
-      'Toggle the Éco-nic switch on any product to instantly see the cost-to-make price before the sale even starts.',
+      'Toggle the Eco-nic switch on any product to instantly see the cost-to-make price before the sale even starts.',
   },
   {
     ui: 'cost' as const,
