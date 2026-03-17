@@ -88,15 +88,30 @@ export default function FooterCountdown() {
             boxShadow: '0 8px 32px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06)',
           }}
         >
-          {/* Top dash strip — green and amber */}
+          {/* Top dash strip — green and mint */}
           <div style={{ display: 'flex', height: '4px', overflow: 'hidden', borderRadius: '18px 18px 0 0' }}>
             {Array.from({ length: 20 }).map((_, i) => (
               <div key={i} style={{ flex: 1, background: i % 2 === 0 ? '#009245' : '#CDDDD4' }} />
             ))}
           </div>
 
+          {/* Blurred stripe glow at bottom — visual flair */}
+          <div
+            aria-hidden
+            style={{
+              position: 'absolute',
+              bottom: 0, left: 0, right: 0,
+              height: 90,
+              backgroundImage: 'repeating-linear-gradient(to right, #009245 0px, #009245 20px, #F18C22 20px, #F18C22 40px)',
+              filter: 'blur(28px)',
+              opacity: 0.13,
+              pointerEvents: 'none',
+              zIndex: 0,
+            }}
+          />
+
           {/* TOP STUB */}
-          <div style={{ padding: '24px 24px 10px', position: 'relative' }}>
+          <div style={{ padding: '24px 24px 10px', position: 'relative', zIndex: 1 }}>
             <p style={{
               fontFamily: 'var(--font-heading)',
               fontSize: 'clamp(28px, 7vw, 36px)',
@@ -120,17 +135,18 @@ export default function FooterCountdown() {
 
           {/* BOTTOM STUB */}
           <div style={{
-            padding: '10px 24px 20px',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '9px',
+            padding: '10px 24px 22px',
+            display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: '10px',
+            position: 'relative', zIndex: 1,
           }}>
             <button
               className="transition-opacity hover:opacity-80 active:scale-[0.97]"
               style={{
                 background: '#0D0D0D',
                 color: '#fff', borderRadius: '100px',
-                padding: '12px 28px', fontSize: '14px', fontWeight: 500,
+                padding: '13px 28px', fontSize: '14px', fontWeight: 500,
                 fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-                cursor: 'pointer', border: 'none',
+                cursor: 'pointer', border: 'none', width: '100%',
               }}
             >
               Download the app
@@ -140,10 +156,10 @@ export default function FooterCountdown() {
               style={{
                 background: 'transparent',
                 color: '#0D0D0D', borderRadius: '100px',
-                padding: '12px 28px', fontSize: '14px', fontWeight: 400,
+                padding: '13px 28px', fontSize: '14px', fontWeight: 500,
                 fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-                border: '1.5px solid rgba(0,0,0,0.2)',
-                cursor: 'pointer',
+                border: '1.5px solid rgba(0,0,0,0.18)',
+                cursor: 'pointer', width: '100%',
               }}
             >
               Join community

@@ -202,6 +202,33 @@ function ToggleUI() {
 
           </div>
         </div>
+
+        {/* Skeleton size + qty selectors — fills vertical space, mirrors product page */}
+        <div className="flex gap-2 mt-4">
+          {/* Size pill skeleton */}
+          <div style={{ height: 28, padding: '0 14px', borderRadius: 8, border: '1px solid #E8E8E8', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div style={{ width: 28, height: 7, borderRadius: 3, backgroundColor: '#EBEBEB' }} />
+            <div style={{ width: 10, height: 7, borderRadius: 3, backgroundColor: '#D5D5D5' }} />
+          </div>
+          {/* Qty stepper skeleton */}
+          <div style={{ height: 28, padding: '0 10px', borderRadius: 8, border: '1px solid #E8E8E8', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ width: 8, height: 8, borderRadius: 99, backgroundColor: '#E0E0E0' }} />
+            <div style={{ width: 10, height: 7, borderRadius: 3, backgroundColor: '#D0D0D0' }} />
+            <div style={{ width: 8, height: 8, borderRadius: 99, backgroundColor: '#E0E0E0' }} />
+          </div>
+        </div>
+
+        {/* Remove/wishlist skeleton row */}
+        <div className="flex mt-3" style={{ borderTop: '1px solid #F0F0F0', width: '100%', paddingTop: 10, gap: 0 }}>
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+            <div style={{ width: 48, height: 7, borderRadius: 3, backgroundColor: '#EBEBEB' }} />
+          </div>
+          <div style={{ width: 1, backgroundColor: '#F0F0F0' }} />
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+            <div style={{ width: 80, height: 7, borderRadius: 3, backgroundColor: '#EBEBEB' }} />
+          </div>
+        </div>
+
       </div>
 
     </div>
@@ -423,25 +450,30 @@ function fmtTime(s: number) {
 }
 
 function CartUI() {
-  // isFair: false = show retail prices, true = fair prices stamped in
+  const [idx,    setIdx]    = useState(0)
   const [isFair, setIsFair] = useState(false)
   const [secs,   setSecs]   = useState(START_SECS)
   const ref    = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: false, margin: '-40px' })
 
-  // Cycle: retail (2s) → fair (3s) → retail → …
+  // Sequence: show item (retail) → stamp fair price → cycle next item
   useEffect(() => {
     if (!inView) return
-    setIsFair(false)
     let t1: ReturnType<typeof setTimeout>
     let t2: ReturnType<typeof setTimeout>
-    const run = () => {
-      t1 = setTimeout(() => setIsFair(true),  2000)
-      t2 = setTimeout(() => setIsFair(false), 5200)
+    let t3: ReturnType<typeof setTimeout>
+
+    const show = (i: number) => {
+      setIdx(i)
+      setIsFair(false)
+      t1 = setTimeout(() => setIsFair(true), 1600)
+      t2 = setTimeout(() => {
+        setIsFair(false)
+        t3 = setTimeout(() => show((i + 1) % CART_ITEMS.length), 420)
+      }, 4600)
     }
-    run()
-    const id = setInterval(run, 5600)
-    return () => { clearTimeout(t1); clearTimeout(t2); clearInterval(id) }
+    show(0)
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3) }
   }, [inView])
 
   useEffect(() => {
@@ -449,112 +481,122 @@ function CartUI() {
     return () => clearInterval(id)
   }, [])
 
-  const ease = [0.25, 0.1, 0.25, 1] as const
+  const item    = CART_ITEMS[idx]
+  const saving  = item.retail - item.ctm
+  const savePct = Math.round((saving / item.retail) * 100)
+  const ease    = [0.25, 0.1, 0.25, 1] as const
 
   return (
     <div ref={ref} className="flex flex-col h-full select-none overflow-hidden">
 
-      {/* ── Cart rows ── */}
-      <div className="flex-1 px-5 flex flex-col justify-center" style={{ paddingTop: 20, paddingBottom: 4 }}>
+      {/* ── Item area ── */}
+      <div className="flex-1 flex flex-col justify-center px-5" style={{ paddingTop: 18, paddingBottom: 14 }}>
 
-        {/* label */}
-        <div style={{ fontFamily: HN, fontSize: 8, fontWeight: 600, color: '#C8C8C8', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 14 }}>
-          My Cart
+        {/* header + dots */}
+        <div className="flex items-center justify-between mb-3">
+          <span style={{ fontFamily: HN, fontSize: 8, fontWeight: 600, color: '#C4C4C4', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+            My Cart
+          </span>
+          <div className="flex items-center gap-1">
+            {CART_ITEMS.map((_, i) => (
+              <div key={i} style={{
+                width: i === idx ? 14 : 4, height: 4, borderRadius: 99,
+                backgroundColor: i === idx ? '#BBBBBB' : '#E5E5E5',
+                transition: 'all 0.36s ease',
+              }} />
+            ))}
+          </div>
         </div>
 
-        {/* rows */}
-        {CART_ITEMS.map((item, i) => {
-          const d = i * 0.08
-          return (
-            <div
-              key={item.name}
-              className="flex items-center gap-3"
-              style={{ paddingTop: 9, paddingBottom: 9, borderBottom: i < 2 ? '1px solid #F4F4F4' : 'none' }}
-            >
-              {/* skeleton thumbnail */}
-              <div style={{ width: 28, height: 34, borderRadius: 5, backgroundColor: '#EFEFEF', flexShrink: 0 }} />
+        {/* single item — animates in/out on idx change */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={idx}
+            className="flex gap-3 items-start"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.28, ease }}
+          >
+            {/* skeleton thumbnail */}
+            <div style={{ width: 58, height: 72, borderRadius: 8, backgroundColor: '#ECECEC', flexShrink: 0 }} />
 
-              {/* name + size */}
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontFamily: HN, fontSize: 10.5, fontWeight: 500, color: '#1A1A1A' }}>{item.name}</div>
-                <div style={{ fontFamily: HN, fontSize: 8, color: '#C0C0C0', marginTop: 1 }}>Size {item.size}</div>
-              </div>
+            {/* info */}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontFamily: HN, fontSize: 12, fontWeight: 500, color: '#111', lineHeight: 1.2 }}>{item.name}</div>
+              <div style={{ fontFamily: HN, fontSize: 8.5, color: '#AAA', marginTop: 2, lineHeight: 1.3 }}>{item.desc}</div>
+              <div style={{ fontFamily: HN, fontSize: 8, color: '#CCC', marginTop: 2 }}>Size {item.size}</div>
 
-              {/* price — retail → green badge */}
-              <div style={{ position: 'relative', flexShrink: 0, textAlign: 'right', minWidth: 52 }}>
-                <motion.span
-                  style={{ fontFamily: HN, fontSize: 11, fontWeight: 500, display: 'block' }}
+              {/* price block */}
+              <div style={{ marginTop: 10 }}>
+                {/* retail — strikes when fair */}
+                <motion.div
+                  style={{ fontFamily: HN, fontSize: 11.5, fontWeight: 500 }}
                   animate={{ color: isFair ? '#CCC' : '#333', textDecoration: isFair ? 'line-through' : 'none' }}
-                  transition={{ duration: 0.22, ease, delay: isFair ? d : 0 }}
+                  transition={{ duration: 0.22, ease }}
                 >
                   {fmtRupee(item.retail)}
-                </motion.span>
-                <motion.span
-                  style={{
-                    position: 'absolute', right: 0, top: 0,
-                    backgroundColor: GREEN, borderRadius: 5, padding: '2px 6px',
-                    fontFamily: HN, fontSize: 11, fontWeight: 600, color: '#fff',
-                    boxShadow: 'inset 0 -1px 0 rgba(0,0,0,0.15)',
-                    originX: 1, originY: 0.5, whiteSpace: 'nowrap',
-                  }}
-                  animate={{ scaleX: isFair ? 1 : 0, opacity: isFair ? 1 : 0 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 30, opacity: { duration: 0.08 }, delay: isFair ? d + 0.05 : 0 }}
+                </motion.div>
+
+                {/* fair badge + % off */}
+                <motion.div
+                  className="flex items-center gap-2"
+                  style={{ marginTop: 5, originX: 0, originY: 0.5 }}
+                  animate={{ opacity: isFair ? 1 : 0, scale: isFair ? 1 : 0.88 }}
+                  transition={{ type: 'spring', stiffness: 380, damping: 28, opacity: { duration: 0.14 }, delay: isFair ? 0.09 : 0 }}
                 >
-                  {fmtRupee(item.ctm)}
-                </motion.span>
+                  <div style={{
+                    backgroundColor: GREEN, borderRadius: 6, padding: '4px 10px',
+                    fontFamily: HN, fontSize: 15, fontWeight: 600, color: '#fff',
+                    letterSpacing: '-0.2px',
+                    boxShadow: 'inset 0 -1.5px 0 rgba(0,0,0,0.16)',
+                  }}>
+                    {fmtRupee(item.ctm)}
+                  </div>
+                  <div style={{ fontFamily: HN, fontSize: 9, fontWeight: 600, color: GREEN }}>{savePct}% off</div>
+                </motion.div>
               </div>
             </div>
-          )
-        })}
+          </motion.div>
+        </AnimatePresence>
 
-        {/* total */}
-        <div className="flex justify-between items-center" style={{ paddingTop: 10 }}>
-          <span style={{ fontFamily: HN, fontSize: 8, fontWeight: 600, color: '#C0C0C0', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Total</span>
-          <div className="flex items-center gap-1.5">
-            <motion.span
-              style={{ fontFamily: HN, fontSize: 11, fontWeight: 500 }}
-              animate={{ color: isFair ? '#CCC' : '#333', textDecoration: isFair ? 'line-through' : 'none' }}
-              transition={{ duration: 0.22, ease, delay: isFair ? 0.26 : 0 }}
-            >
-              {fmtRupee(CART_TOTAL_RETAIL)}
-            </motion.span>
-            <motion.span
-              style={{
-                backgroundColor: GREEN, borderRadius: 6, padding: '3px 8px',
-                fontFamily: HN, fontSize: 11, fontWeight: 600, color: '#fff',
-                boxShadow: 'inset 0 -1px 0 rgba(0,0,0,0.15)',
-                originX: 1, originY: 0.5,
-              }}
-              animate={{ scaleX: isFair ? 1 : 0, opacity: isFair ? 1 : 0 }}
-              transition={{ type: 'spring', stiffness: 360, damping: 28, opacity: { duration: 0.08 }, delay: isFair ? 0.32 : 0 }}
-            >
-              {fmtRupee(CART_TOTAL_CTM)}
-            </motion.span>
+        {/* skeleton remove/wishlist row */}
+        <div className="flex mt-4" style={{ borderTop: '1px solid #F4F4F4', paddingTop: 10, gap: 0 }}>
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+            <div style={{ width: 44, height: 7, borderRadius: 3, backgroundColor: '#EBEBEB' }} />
+          </div>
+          <div style={{ width: 1, backgroundColor: '#F4F4F4' }} />
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+            <div style={{ width: 78, height: 7, borderRadius: 3, backgroundColor: '#EBEBEB' }} />
           </div>
         </div>
       </div>
 
-      {/* ── savings + countdown ── */}
-      <motion.div
-        animate={{ opacity: isFair ? 1 : 0, y: isFair ? 0 : 8 }}
-        transition={{ duration: 0.34, ease, delay: isFair ? 0.42 : 0 }}
-      >
-        <div className="flex items-center justify-between px-5 py-2" style={{ backgroundColor: GREEN }}>
-          <span style={{ fontFamily: HN, fontSize: 9.5, color: 'rgba(255,255,255,0.85)' }}>
-            You&rsquo;re saving <span style={{ fontWeight: 600, color: '#fff' }}>{fmtRupee(CART_SAVING)}</span>
-          </span>
-          <EcoNicLogo dark={false} />
+      {/* ── Savings strip — always visible green ── */}
+      <div className="flex items-center justify-between px-5 py-2.5" style={{ backgroundColor: GREEN }}>
+        <span style={{ fontFamily: HN, fontSize: 9.5, color: 'rgba(255,255,255,0.85)' }}>
+          You&rsquo;re saving{' '}
+          <motion.span
+            style={{ fontWeight: 600, color: '#fff' }}
+            animate={{ opacity: isFair ? 1 : 0.45 }}
+            transition={{ duration: 0.3 }}
+          >
+            {fmtRupee(saving)}
+          </motion.span>
+        </span>
+        <EcoNicLogo dark={false} />
+      </div>
+
+      {/* ── Countdown + CTA — always visible dark ── */}
+      <div className="flex items-center justify-between px-5 py-2" style={{ backgroundColor: '#111' }}>
+        <div>
+          <div style={{ fontFamily: HN, fontSize: 7, color: 'rgba(255,255,255,0.38)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Fair starts soon</div>
+          <div style={{ fontFamily: HN, fontSize: 11, fontWeight: 600, color: '#fff', letterSpacing: '0.04em', marginTop: 1 }}>{fmtTime(secs)}</div>
         </div>
-        <div className="flex items-center justify-between px-5 py-2" style={{ backgroundColor: '#111' }}>
-          <div>
-            <div style={{ fontFamily: HN, fontSize: 7, color: 'rgba(255,255,255,0.36)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Fair starts soon</div>
-            <div style={{ fontFamily: HN, fontSize: 11, fontWeight: 600, color: '#fff', letterSpacing: '0.04em', marginTop: 1 }}>{fmtTime(secs)}</div>
-          </div>
-          <div style={{ backgroundColor: '#fff', borderRadius: 6, padding: '5px 11px', fontFamily: HN, fontSize: 8, fontWeight: 600, color: '#111', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-            Shop in App
-          </div>
+        <div style={{ backgroundColor: '#fff', borderRadius: 6, padding: '5px 11px', fontFamily: HN, fontSize: 8, fontWeight: 600, color: '#111', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+          Shop in App
         </div>
-      </motion.div>
+      </div>
 
     </div>
   )
