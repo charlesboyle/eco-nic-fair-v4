@@ -57,9 +57,11 @@ interface GarlandProps {
   animDuration: number
   stringOpacity?: number
   flagClass?: string
+  flagHalf?: number   // half-width of flag base
+  flagHeight?: number // height of flag triangle
 }
 
-function Garland({ p0, c1, c2, p1, seq, delayOffset, animDuration, stringOpacity = 0.4, flagClass = 'g-flag' }: GarlandProps) {
+function Garland({ p0, c1, c2, p1, seq, delayOffset, animDuration, stringOpacity = 0.4, flagClass = 'g-flag', flagHalf = 8, flagHeight = 20 }: GarlandProps) {
   // Skip first & last t values — those sit right at the edge anchors where
   // the string is nearly vertical or off-screen, causing mis-oriented flags
   const tVals = arcLengthTValues(p0, c1, c2, p1).slice(1, -1)
@@ -85,7 +87,7 @@ function Garland({ p0, c1, c2, p1, seq, delayOffset, animDuration, stringOpacity
         <g key={i} transform={`translate(${f.x.toFixed(4)},${f.y.toFixed(4)}) rotate(${f.angle.toFixed(4)})`}>
           <polygon
             className={flagClass}
-            points="-11,0 11,0 0,28"
+            points={`-${flagHalf},0 ${flagHalf},0 0,${flagHeight}`}
             fill={f.color}
             opacity="0.9"
             style={{ animationDelay: `${f.delay.toFixed(2)}s`, animationDuration: `${animDuration}s` }}
@@ -96,17 +98,17 @@ function Garland({ p0, c1, c2, p1, seq, delayOffset, animDuration, stringOpacity
   )
 }
 
-// ----- MOBILE COORDINATES (Shifted lower so garlands hang below the logo) -----
+// ----- MOBILE COORDINATES (Original asymmetrical layout) -----
 // G1: left side (low, flat exit) → top-right corner
-const G1_M: [P, P, P, P] = [[0, 660], [300, 660], [1000, 380], [1000, 300]]
+const G1_M: [P, P, P, P] = [[0, 420], [300, 420], [1000, 160], [1000, 80]]
 // G2: right side (low, flat exit) → top-left corner
-const G2_M: [P, P, P, P] = [[1000, 600], [700, 600], [0, 390], [0, 310]]
+const G2_M: [P, P, P, P] = [[1000, 370], [700, 370], [0, 175], [0, 90]]
 
 // ----- DESKTOP COORDINATES (Flatter, symmetrical layout) -----
 // Raised starting point (smaller y) to be closer to ending point
 // Control points (c1, c2) pulled closer to their anchor points vertically to flatten the curve trajectory
-const G1_D: [P,P,P,P] = [[0, 50], [300, 30], [800, 20], [1000, 10]]
-const G2_D: [P,P,P,P] = [[1000, 50], [700, 30], [200, 20], [0, 10]]
+const G1_D: [P,P,P,P] = [[0, 180], [260, 130], [720, 90], [1000, 65]]
+const G2_D: [P,P,P,P] = [[1000, 180], [740, 130], [280, 90], [0, 65]]
 
 export default function GarlandBunting() {
   return (
@@ -120,42 +122,44 @@ export default function GarlandBunting() {
         <style>{`
           @keyframes g-sway-a {
             0%, 100% { transform: rotate(0deg); }
-            30%       { transform: rotate(3deg); }
-            65%       { transform: rotate(-3deg); }
+            30%       { transform: rotate(5deg); }
+            65%       { transform: rotate(-5deg); }
           }
           .g-flag {
             transform-box: fill-box;
             transform-origin: top center;
-            animation: g-sway-a 3.2s ease-in-out infinite;
+            animation: g-sway-a 2.8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
           }
           @keyframes g-sway-b {
             0%, 100% { transform: rotate(0deg); }
-            35%       { transform: rotate(-2.8deg); }
-            70%       { transform: rotate(2.8deg); }
+            35%       { transform: rotate(-4.5deg); }
+            70%       { transform: rotate(4.5deg); }
           }
           .g-flag-b {
             transform-box: fill-box;
             transform-origin: top center;
-            animation: g-sway-b 3.6s ease-in-out infinite;
+            animation: g-sway-b 3.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
           }
           @keyframes g1-pendulum {
             0%, 100% { transform: rotate(0deg); }
-            50%       { transform: rotate(0.8deg); }
+            25%       { transform: rotate(3.5deg); }
+            75%       { transform: rotate(-3deg); }
           }
           .g1-group {
             transform-box: view-box;
             transform-origin: 1000px 18px;
-            animation: g1-pendulum 4.5s ease-in-out infinite;
+            animation: g1-pendulum 4s cubic-bezier(0.37, 0, 0.63, 1) infinite;
           }
           @keyframes g2-pendulum {
             0%, 100% { transform: rotate(0deg); }
-            50%       { transform: rotate(-0.7deg); }
+            25%       { transform: rotate(-3deg); }
+            75%       { transform: rotate(2.8deg); }
           }
           .g2-group {
             transform-box: view-box;
             transform-origin: 0px 28px;
-            animation: g2-pendulum 5s ease-in-out infinite;
-            animation-delay: 1.2s;
+            animation: g2-pendulum 4.5s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+            animation-delay: 0.8s;
           }
           /* Responsive toggles */
           .g-desktop { display: none; }
@@ -172,14 +176,16 @@ export default function GarlandBunting() {
           <g className="g2-group">
             <Garland p0={G2_M[0]} c1={G2_M[1]} c2={G2_M[2]} p1={G2_M[3]}
               seq={SEQ_B} delayOffset={0.4} animDuration={3.6}
-              stringOpacity={0.35} flagClass="g-flag-b" />
+              stringOpacity={0.35} flagClass="g-flag-b"
+              flagHalf={14} flagHeight={32} />
           </g>
 
           {/* Front garland — left side to top-right corner */}
           <g className="g1-group">
             <Garland p0={G1_M[0]} c1={G1_M[1]} c2={G1_M[2]} p1={G1_M[3]}
               seq={SEQ_A} delayOffset={0} animDuration={3.2}
-              stringOpacity={0.42} />
+              stringOpacity={0.42}
+              flagHalf={14} flagHeight={32} />
           </g>
         </g>
 

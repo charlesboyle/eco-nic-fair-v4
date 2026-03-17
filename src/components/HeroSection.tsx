@@ -29,22 +29,34 @@ export default function HeroSection() {
       className="relative text-center"
       style={{ background: 'linear-gradient(160deg, #ffffff 0%, #F4EFE9 100%)' }}
     >
-      {/* Logo sits above the garland in z-order */}
-      <motion.div
-        className="relative z-20 flex justify-center pt-12 pb-1"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-      >
-        <Image
-          src="/assets/eco-nic-logo.svg"
-          alt="Éco-nic"
-          width={200}
-          height={200}
-          style={{ width: 200, height: 'auto' }}
-          priority
+      {/* Logo container with adaptive white background */}
+      <div className="relative z-20 flex justify-center mb-4">
+        {/* The White Background Capsule */}
+        <motion.div
+          className="absolute top-0 w-[196px] h-full bg-white rounded-b-[16px] z-10 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.10)]"
+          initial={{ opacity: 0, scaleY: 0.8 }}
+          animate={{ opacity: 1, scaleY: 1 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          style={{ transformOrigin: 'top' }}
         />
-      </motion.div>
+
+        {/* The Logo itself */}
+        <motion.div
+          className="relative z-20 pt-4 pb-4 flex justify-center"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+        >
+          <Image
+            src="/assets/eco-nic-logo.svg"
+            alt="Éco-nic"
+            width={170}
+            height={200}
+            style={{ width: 170, height: 'auto' }}
+            priority
+          />
+        </motion.div>
+      </div>
 
       <motion.div
         initial={{ opacity: 0 }}
@@ -54,14 +66,28 @@ export default function HeroSection() {
         <GarlandBunting />
       </motion.div>
 
-      <div className={`flex flex-col items-center px-6 pt-3 pb-12 md:pt-4 md:pb-16 w-full mx-auto ${CONTENT_MAX_W}`}>
-        {/* Stack carousel with CTA overlaid at bottom */}
+      <div className={`flex flex-col items-center px-6 pt-3 pb-0 md:pt-4 w-full mx-auto ${CONTENT_MAX_W}`}>
+
+        {/* Heading first */}
+        <motion.h1
+          className="font-heading text-[#111111] leading-[1.1] mt-2 mb-6 w-full"
+          style={{ fontSize: 'clamp(30px, 6vw, 52px)' }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.65, delay: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+        >
+          India&apos;s first <span className="whitespace-nowrap">Cost-to-Make</span> Fair is back
+          <br />
+          <span className="font-heading" style={{ fontSize: 'clamp(18px, 3.2vw, 30px)', opacity: 0.45 }}>AND IT&apos;S BIGGER THAN EVER</span>
+        </motion.h1>
+
+        {/* Stack carousel — bleeds into Section2 */}
         <motion.div
-          className="relative z-10 mt-2 mb-6"
-          style={{ width: '260px', height: '300px' }}
+          className="relative z-10"
+          style={{ width: '260px', height: '300px', marginBottom: '-90px' }}
           initial={{ opacity: 0, y: 24, scale: 0.97 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.7, delay: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+          transition={{ duration: 0.7, delay: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
         >
           <Stack
             cards={cards}
@@ -69,30 +95,20 @@ export default function HeroSection() {
             autoplayDelay={2800}
             pauseOnHover
             sendToBackOnClick
-animationConfig={{ stiffness: 200, damping: 24 }}
+            animationConfig={{ stiffness: 200, damping: 24 }}
             sensitivity={160}
           />
           {/* CTA overlaid on bottom of stack */}
           <div className="absolute bottom-4 left-0 right-0 flex justify-center z-20">
             <a
               href="#footer-countdown"
-              className="bg-[#0D0D0D] text-white rounded-full px-8 py-3 text-[14px] font-medium font-sans transition-opacity hover:opacity-80 active:scale-[0.97] shadow-lg"
+              className="bg-[#0D0D0D] text-white rounded-full px-8 py-3 text-[14px] font-medium font-sans transition-colors hover:bg-[#3a3a3a] active:scale-[0.97] shadow-lg"
             >
               Get early access
             </a>
           </div>
         </motion.div>
 
-        {/* Heading below carousel */}
-        <motion.h1
-          className="font-heading text-[#111111] leading-[1.04] mt-2 mb-4 w-full text-balance"
-          style={{ fontSize: 'clamp(30px, 6vw, 52px)' }}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.65, delay: 0.65, ease: [0.25, 0.1, 0.25, 1] }}
-        >
-          India's first Cost to Make fair is back bigger <span className="whitespace-nowrap">than ever</span>
-        </motion.h1>
       </div>
     </section>
   )

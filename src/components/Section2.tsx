@@ -4,12 +4,10 @@ import { useRef, useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import CurvedLoop from '@/components/CurvedLoop'
 import { CONTENT_MAX_W } from '@/lib/config'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const MARQUEE = 'STARTS MAR 27 \u25C6 ZERO MARKUPS \u25C6 PAY ONLY COST TO MAKE \u25C6 '
 const GREEN = '#2B6E3A'
 const BETHANY = "'BethanyElingston', Georgia, serif"
 
@@ -39,30 +37,64 @@ function WI({ children }: { children: string }) {
 
 /* ─── Big pill toggle — Bethany font only ─── */
 function CostToMakeToggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
-  const W_PX = 220, H = 66, PAD = 8, KNOB = H - PAD * 2 // knob = 50px
-  // Text area: fill from pill edge to just before knob with minimal gap
-  const textW = W_PX - KNOB - PAD * 2 - 2
+  // Proportions derived from Figma: padding=12, gap=18, border-radius=60
+  const H = 60, PAD = 6, KNOB = H - PAD * 2  // knob = 48px, tighter padding
+  const GAP = 12
+  const TEXT_PAD = 12  // inner L/R padding within text area
+  const TEXT_W = 90   // text zone width
+  const W_PX = PAD + TEXT_W + GAP + KNOB + PAD  // hugs content
 
   return (
     <motion.button
       onClick={onToggle}
       className="relative flex-shrink-0 focus:outline-none cursor-pointer"
-      style={{ width: W_PX, height: H, borderRadius: H / 2, border: 'none', background: 'transparent', padding: 0 }}
+      style={{ width: W_PX, height: H, borderRadius: 60, border: 'none', background: 'transparent', padding: 0 }}
       whileTap={{ scale: 0.97 }}
       transition={{ duration: 0.1 }}
     >
-      {/* Background pill */}
+      {/* ON background */}
       <motion.div
         className="absolute inset-0"
-        style={{ borderRadius: H / 2 }}
-        animate={{ backgroundColor: on ? GREEN : '#C7C7CC' }}
-        transition={{ duration: 0.38, ease: [0.4, 0, 0.2, 1] }}
+        style={{
+          borderRadius: 60,
+          backgroundColor: '#009245',
+          backgroundImage: 'linear-gradient(180deg, rgba(0,0,0,0) 26.92%, rgba(0,0,0,0.2) 100%)',
+          boxShadow: 'inset 0px 6px 21px rgba(0,0,0,0.15)',
+        }}
+        animate={{ opacity: on ? 1 : 0 }}
+        transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+      />
+      {/* OFF background */}
+      <motion.div
+        className="absolute inset-0"
+        style={{
+          borderRadius: 60,
+          backgroundColor: '#DDDDDD',
+          backgroundImage: 'linear-gradient(180deg, rgba(0,0,0,0) 26.92%, rgba(0,0,0,0.1) 100%)',
+          boxShadow: 'inset 0px 6px 21px rgba(0,0,0,0.15)',
+        }}
+        animate={{ opacity: on ? 0 : 1 }}
+        transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+      />
+      {/* Border overlay — multiply blend so it blends into the pill colour */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          borderRadius: 60,
+          border: `1.5px solid ${on ? '#48BE80' : '#C0C0C0'}`,
+          mixBlendMode: 'multiply',
+          transition: 'border-color 0.35s ease',
+        }}
       />
 
-      {/* Knob */}
+      {/* Knob — slides left↔right */}
       <motion.div
-        className="absolute flex items-center justify-center rounded-full bg-white shadow-md overflow-hidden"
-        style={{ width: KNOB, height: KNOB, top: PAD, fontSize: KNOB * 0.52 }}
+        className="absolute flex items-center justify-center rounded-full bg-white overflow-hidden"
+        style={{
+          width: KNOB, height: KNOB, top: PAD,
+          boxShadow: '0 2px 8px rgba(0,0,0,0.22)',
+          fontSize: KNOB * 0.55,
+        }}
         animate={{ x: on ? W_PX - KNOB - PAD : PAD }}
         transition={{ type: 'spring', stiffness: 420, damping: 33 }}
       >
@@ -84,32 +116,32 @@ function CostToMakeToggle({ on, onToggle }: { on: boolean; onToggle: () => void 
         </AnimatePresence>
       </motion.div>
 
-      {/* ON label — left of knob, Bethany only */}
+      {/* ON label — left side, slides in from left when ON */}
       <motion.div
-        className="absolute flex flex-col items-start justify-center"
-        style={{ left: PAD, top: 0, bottom: 0, width: textW, pointerEvents: 'none' }}
-        animate={{ opacity: on ? 1 : 0 }}
-        transition={{ duration: 0.22, ease: 'easeOut' }}
+        className="absolute flex flex-col items-center justify-center overflow-hidden"
+        style={{ left: TEXT_PAD, top: 0, bottom: 0, width: TEXT_W - TEXT_PAD + PAD, pointerEvents: 'none' }}
+        animate={{ opacity: on ? 1 : 0, x: on ? 0 : -10 }}
+        transition={{ type: 'spring', stiffness: 380, damping: 32 }}
       >
-        <span style={{ fontFamily: BETHANY, fontSize: 13, color: 'rgba(255,255,255,0.75)', lineHeight: 1.1 }}>
+        <span style={{ fontFamily: BETHANY, fontSize: 12, color: 'rgba(255,255,255,0.75)', lineHeight: 1.15 }}>
           Cost to Make
         </span>
-        <span style={{ fontFamily: BETHANY, fontSize: 22, color: '#fff', lineHeight: 1.1 }}>
+        <span style={{ fontFamily: BETHANY, fontSize: 21, color: '#fff', lineHeight: 1.1 }}>
           ON
         </span>
       </motion.div>
 
-      {/* OFF label — right of knob, Bethany only */}
+      {/* OFF label — right side, slides in from right when OFF */}
       <motion.div
-        className="absolute flex flex-col items-end justify-center"
-        style={{ right: PAD, top: 0, bottom: 0, width: textW, pointerEvents: 'none' }}
-        animate={{ opacity: on ? 0 : 1 }}
-        transition={{ duration: 0.22, ease: 'easeOut' }}
+        className="absolute flex flex-col items-center justify-center overflow-hidden"
+        style={{ right: TEXT_PAD, top: 0, bottom: 0, width: TEXT_W - TEXT_PAD + PAD, pointerEvents: 'none' }}
+        animate={{ opacity: on ? 0 : 1, x: on ? 10 : 0 }}
+        transition={{ type: 'spring', stiffness: 380, damping: 32 }}
       >
-        <span style={{ fontFamily: BETHANY, fontSize: 13, color: 'rgba(80,80,80,0.7)', lineHeight: 1.1 }}>
+        <span style={{ fontFamily: BETHANY, fontSize: 12, color: 'rgba(80,80,80,0.7)', lineHeight: 1.15 }}>
           Cost to Make
         </span>
-        <span style={{ fontFamily: BETHANY, fontSize: 22, color: '#555', lineHeight: 1.1 }}>
+        <span style={{ fontFamily: BETHANY, fontSize: 21, color: '#666', lineHeight: 1.1 }}>
           OFF
         </span>
       </motion.div>
@@ -150,31 +182,7 @@ export default function Section2() {
 
   return (
     <section className="bg-white relative z-[1]">
-      <motion.div
-        className="relative z-10"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-60px' }}
-        transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
-      >
-        <CurvedLoop
-          marqueeText={MARQUEE}
-          speed={1.2}
-          curveAmount={9}
-          interactive={false}
-          className="!fill-[#111111] text-[3rem] font-heading"
-          bandFill="#ffffff"
-          awningColor="#F18C22"
-          awningStripeWidth={200}
-          awningHeight={26}
-          bandPaddingTop={130}
-          bandPaddingBottom={40}
-          bottomBorderColor="#F18C22"
-          bottomBorderWidth={4}
-        />
-      </motion.div>
-
-      <div ref={containerRef} className={`px-6 pt-14 pb-20 md:px-14 md:pt-20 md:pb-32 w-full mx-auto ${CONTENT_MAX_W}`}>
+      <div ref={containerRef} className={`px-6 pt-32 pb-20 md:px-14 md:pt-40 md:pb-32 w-full mx-auto ${CONTENT_MAX_W}`}>
 
         {/* Headings — always visible */}
         <p className="font-heading text-[clamp(26px,4.5vw,44px)] font-normal leading-tight text-[#555555] mt-5 mb-2">
@@ -197,16 +205,10 @@ export default function Section2() {
           <WI>For five days,</WI>{' '}<W>VIRGIO removes retail margins and sells on cost-to-make.</W>
         </p>
 
-        {/* Toggle — sits right above "You'll see exactly" */}
-        <motion.div
-          className="my-8"
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.55, ease: [0.25, 0.1, 0.25, 1] }}
-        >
+        {/* Toggle — scroll-revealed with the same blur effect as the words */}
+        <span className="word inline-block mt-6 mb-1">
           <CostToMakeToggle on={open} onToggle={() => setOpen(v => !v)} />
-        </motion.div>
+        </span>
 
         {/* Collapsible: "You'll see exactly..." onward */}
         <motion.div
