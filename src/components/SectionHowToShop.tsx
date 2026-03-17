@@ -472,11 +472,6 @@ function CartUI() {
       {/* ── Items area ── */}
       <div className="flex-1 flex flex-col px-4 pt-4" style={{ minHeight: 0 }}>
 
-        {/* Header */}
-        <div style={{ fontFamily: HN, fontSize: 8, fontWeight: 600, color: '#C8C8C8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12 }}>
-          My Cart{count > 0 ? ` · ${count} item${count > 1 ? 's' : ''}` : ''}
-        </div>
-
         {/* Item rows — slide in as count increases */}
         <div className="flex flex-col gap-3">
           <AnimatePresence>
