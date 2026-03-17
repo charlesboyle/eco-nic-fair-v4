@@ -52,16 +52,7 @@ export default function FooterCountdown() {
   }, [])
 
   return (
-    <footer id="footer-countdown" className="relative" style={{ background: '#F4EFE9' }}>
-
-      {/* Ghost watermark */}
-      <span
-        aria-hidden="true"
-        className="pointer-events-none select-none absolute -bottom-8 -right-8 font-heading leading-none opacity-[0.04] text-[#111] overflow-hidden"
-        style={{ fontSize: 'clamp(120px, 28vw, 240px)', whiteSpace: 'nowrap' }}
-      >
-        Fair
-      </span>
+    <footer id="footer-countdown" className="relative" style={{ background: 'linear-gradient(180deg, #F4EFE9 0%, #ffffff 100%)' }}>
 
       {/* Amber top accent line */}
       <div className="w-full h-[3px]" style={{ background: '#F18C22' }} />
@@ -88,24 +79,74 @@ export default function FooterCountdown() {
           27 March 2026 · 12:00 am IST
         </p>
 
-        {/* Early access card — green fill */}
-        <div className="rounded-2xl p-5 md:p-6 mb-12 w-full max-w-md"
-          style={{ background: '#009245' }}>
-          <div className="flex flex-col items-center gap-1 mb-5">
-            <p className="font-body font-semibold text-white text-[1rem] leading-snug">
-              Early access starts 4 hours earlier
+        {/* Early access — ticket pass */}
+        <div
+          className="w-full max-w-sm mb-12 relative overflow-hidden"
+          style={{
+            background: '#ffffff',
+            borderRadius: '18px',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06)',
+          }}
+        >
+          {/* Top dash strip — green and amber */}
+          <div style={{ display: 'flex', height: '4px', overflow: 'hidden', borderRadius: '18px 18px 0 0' }}>
+            {Array.from({ length: 20 }).map((_, i) => (
+              <div key={i} style={{ flex: 1, background: i % 2 === 0 ? '#009245' : '#CDDDD4' }} />
+            ))}
+          </div>
+
+          {/* TOP STUB */}
+          <div style={{ padding: '24px 24px 10px', position: 'relative' }}>
+            <p style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: 'clamp(28px, 7vw, 36px)',
+              color: '#0D0D0D',
+              lineHeight: 1.1,
+              marginBottom: '10px',
+              letterSpacing: '0em',
+            }}>
+              Early Access
             </p>
-            <p className="font-body text-[rgba(255,255,255,0.75)] text-[0.85rem] leading-snug">
-              for app users and community members
+            <p style={{
+              fontSize: '15px',
+              color: 'rgba(0,0,0,0.48)',
+              lineHeight: 1.4,
+              fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+              fontWeight: 400,
+            }}>
+              App users and community members get in 4 hours early before the fair opens to everyone
             </p>
           </div>
-          <div className="flex gap-3 flex-wrap justify-center">
-            <button className="bg-white text-[#009245] rounded-full px-7 py-3 text-[14px] font-medium font-sans transition-opacity hover:opacity-90 active:scale-[0.97]">
+
+          {/* BOTTOM STUB */}
+          <div style={{
+            padding: '10px 24px 20px',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '9px',
+          }}>
+            <button
+              className="transition-opacity hover:opacity-80 active:scale-[0.97]"
+              style={{
+                background: '#0D0D0D',
+                color: '#fff', borderRadius: '100px',
+                padding: '12px 28px', fontSize: '14px', fontWeight: 500,
+                fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                cursor: 'pointer', border: 'none',
+              }}
+            >
               Download the app
             </button>
-            <button className="bg-transparent text-white rounded-full px-7 py-3 text-[14px] font-medium font-sans hover:opacity-70 active:scale-[0.97] transition-opacity"
-              style={{ border: '1.5px solid rgba(255,255,255,0.5)' }}>
-              Join the community
+            <button
+              className="transition-opacity hover:opacity-70 active:scale-[0.97]"
+              style={{
+                background: 'transparent',
+                color: '#0D0D0D', borderRadius: '100px',
+                padding: '12px 28px', fontSize: '14px', fontWeight: 400,
+                fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                border: '1.5px solid rgba(0,0,0,0.2)',
+                cursor: 'pointer',
+              }}
+            >
+              Join community
             </button>
           </div>
         </div>

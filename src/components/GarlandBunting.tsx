@@ -96,11 +96,11 @@ function Garland({ p0, c1, c2, p1, seq, delayOffset, animDuration, stringOpacity
   )
 }
 
-// ----- MOBILE COORDINATES (Original asymmetrical layout) -----
+// ----- MOBILE COORDINATES (Shifted lower so garlands hang below the logo) -----
 // G1: left side (low, flat exit) → top-right corner
-const G1_M: [P, P, P, P] = [[0, 525], [300, 525], [1000, 240], [1000, 168]]
+const G1_M: [P, P, P, P] = [[0, 660], [300, 660], [1000, 380], [1000, 300]]
 // G2: right side (low, flat exit) → top-left corner
-const G2_M: [P, P, P, P] = [[1000, 470], [700, 470], [0, 255], [0, 178]]
+const G2_M: [P, P, P, P] = [[1000, 600], [700, 600], [0, 390], [0, 310]]
 
 // ----- DESKTOP COORDINATES (Flatter, symmetrical layout) -----
 // Raised starting point (smaller y) to be closer to ending point
@@ -110,7 +110,7 @@ const G2_D: [P,P,P,P] = [[1000, 50], [700, 30], [200, 20], [0, 10]]
 
 export default function GarlandBunting() {
   return (
-    <div className="absolute inset-x-0 top-0 pointer-events-none z-10" style={{ overflow: 'visible' }}>
+    <div className="absolute inset-x-0 top-0 pointer-events-none z-0" style={{ overflow: 'visible' }}>
       <svg
         viewBox="0 0 1000 430"
         width="100%"

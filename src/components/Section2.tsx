@@ -125,15 +125,17 @@ export default function Section2() {
         </p>
 
         <p className="font-heading text-[clamp(22px,3.5vw,36px)] font-normal leading-tight text-[#111111] mt-10 mb-5">
-          Shop before everyone else with Early Access
+          <W>Shop before everyone else with Early Access</W>
         </p>
 
-        <a
-          href="#footer-countdown"
-          className="inline-block bg-[#0D0D0D] text-white rounded-full px-8 py-3 text-[14px] font-medium font-sans transition-opacity hover:opacity-80 active:scale-[0.97]"
-        >
-          Get early access
-        </a>
+        <span className="word inline-block">
+          <a
+            href="#footer-countdown"
+            className="inline-block bg-[#0D0D0D] text-white rounded-full px-8 py-3 text-[14px] font-medium font-sans transition-opacity hover:opacity-80 active:scale-[0.97]"
+          >
+            Get early access
+          </a>
+        </span>
 
       </div>
     </section>

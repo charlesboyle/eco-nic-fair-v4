@@ -57,7 +57,7 @@ export default function HeroSection() {
       <div className={`flex flex-col items-center px-6 pt-3 pb-12 md:pt-4 md:pb-16 w-full mx-auto ${CONTENT_MAX_W}`}>
         {/* Stack carousel with CTA overlaid at bottom */}
         <motion.div
-          className="relative mt-2 mb-6"
+          className="relative z-10 mt-2 mb-6"
           style={{ width: '260px', height: '300px' }}
           initial={{ opacity: 0, y: 24, scale: 0.97 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
