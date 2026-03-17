@@ -75,7 +75,7 @@ export default function FooterCountdown() {
           <CountdownUnit value={time.seconds} label="Secs" />
         </div>
 
-        <p className="font-heading font-normal text-[#999] mb-10" style={{ fontSize: 'clamp(14px,2vw,18px)', letterSpacing: '0.01em' }}>
+        <p className="font-heading font-normal text-[#555] mb-10" style={{ fontSize: 'clamp(16px,2.4vw,21px)', letterSpacing: '0.01em' }}>
           27 March 2026 &middot; 12:00 am IST
         </p>
 
@@ -114,7 +114,7 @@ export default function FooterCountdown() {
           <div style={{ padding: '24px 24px 10px', position: 'relative', zIndex: 1 }}>
             <p style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(28px, 7vw, 36px)',
+              fontSize: 'clamp(20px, 5vw, 26px)',
               color: '#0D0D0D',
               lineHeight: 1.1,
               marginBottom: '10px',
@@ -174,7 +174,7 @@ export default function FooterCountdown() {
             alt="Éco-nic"
             width={72}
             height={72}
-            style={{ width: 72, height: 'auto', opacity: 0.35 }}
+            style={{ width: 72, height: 'auto' }}
           />
           <div className="text-center">
             <p className="font-body text-[#AAA] text-[12px] leading-snug">© 2026 VIRGIO</p>
