@@ -429,7 +429,7 @@ const CTM_TOTALS = [0, 1290, 2080, 2770]
 function CartUI() {
   const [count, setCount] = useState(0)
   const ref    = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: false, margin: '-40px' })
+  const inView = useInView(ref, { once: true, margin: '-40px' })
 
   // MotionValue for smooth continuous rolling number — never pops or resets visibly
   const displayTotal = useMotionValue(0)
