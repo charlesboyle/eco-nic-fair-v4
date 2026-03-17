@@ -23,7 +23,7 @@ function CountdownUnit({ value, label }: { value: number; label: string }) {
     <div className="flex flex-col items-center">
       <div
         className="relative overflow-hidden tabular-nums font-heading text-[#111111] leading-none"
-        style={{ fontSize: 'clamp(52px, 13vw, 112px)', height: 'clamp(56px, 14vw, 120px)', minWidth: 'clamp(60px, 13vw, 120px)' }}
+        style={{ fontSize: 'clamp(32px, 7vw, 66px)', height: 'clamp(36px, 8vw, 72px)', minWidth: 'clamp(36px, 7vw, 72px)' }}
       >
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.span
@@ -38,7 +38,7 @@ function CountdownUnit({ value, label }: { value: number; label: string }) {
           </motion.span>
         </AnimatePresence>
       </div>
-      <span className="font-body text-[#999] text-[10px] uppercase tracking-[0.18em] mt-2">{label}</span>
+      <span className="font-body text-[#999] text-[9px] uppercase tracking-[0.18em] mt-1.5">{label}</span>
     </div>
   )
 }
@@ -65,18 +65,18 @@ export default function FooterCountdown() {
         </p>
 
         {/* Countdown — amber colons per design guidelines */}
-        <div className="flex items-end gap-2 md:gap-4 mb-4">
+        <div className="flex items-end gap-1.5 md:gap-3 mb-4">
           <CountdownUnit value={time.days} label="Days" />
-          <span className="font-heading pb-7 md:pb-10 leading-none" style={{ fontSize: 'clamp(28px,6vw,56px)', color: '#F18C22' }}>:</span>
+          <span className="font-heading pb-4 md:pb-5 leading-none" style={{ fontSize: 'clamp(18px,3.5vw,32px)', color: '#F18C22' }}>:</span>
           <CountdownUnit value={time.hours} label="Hours" />
-          <span className="font-heading pb-7 md:pb-10 leading-none" style={{ fontSize: 'clamp(28px,6vw,56px)', color: '#F18C22' }}>:</span>
+          <span className="font-heading pb-4 md:pb-5 leading-none" style={{ fontSize: 'clamp(18px,3.5vw,32px)', color: '#F18C22' }}>:</span>
           <CountdownUnit value={time.minutes} label="Mins" />
-          <span className="font-heading pb-7 md:pb-10 leading-none" style={{ fontSize: 'clamp(28px,6vw,56px)', color: '#F18C22' }}>:</span>
+          <span className="font-heading pb-4 md:pb-5 leading-none" style={{ fontSize: 'clamp(18px,3.5vw,32px)', color: '#F18C22' }}>:</span>
           <CountdownUnit value={time.seconds} label="Secs" />
         </div>
 
-        <p className="font-body text-[#888] text-[0.8rem] mb-10 tracking-wide">
-          27 March 2026 · 12:00 am IST
+        <p className="font-heading font-normal text-[#999] mb-10" style={{ fontSize: 'clamp(14px,2vw,18px)', letterSpacing: '0.01em' }}>
+          27 March 2026 &middot; 12:00 am IST
         </p>
 
         {/* Early access — ticket pass */}
@@ -152,17 +152,18 @@ export default function FooterCountdown() {
         </div>
 
         {/* Footer disclaimer */}
-        <div className="flex items-center justify-center gap-3 pt-8 w-full" style={{ borderTop: '1px solid rgba(0,0,0,0.10)' }}>
+        <div className="flex flex-col items-center justify-center gap-3 pt-8 w-full" style={{ borderTop: '1px solid rgba(0,0,0,0.10)' }}>
           <Image
             src="/assets/eco-nic-logo.svg"
             alt="Éco-nic"
-            width={28}
-            height={28}
-            style={{ width: 28, height: 'auto', opacity: 0.5 }}
+            width={72}
+            height={72}
+            style={{ width: 72, height: 'auto', opacity: 0.35 }}
           />
-          <p className="font-body text-[#999] text-[13px]">
-            © 2026 VIRGIO. Where fashion comes full circle.
-          </p>
+          <div className="text-center">
+            <p className="font-body text-[#AAA] text-[12px] leading-snug">© 2026 VIRGIO</p>
+            <p className="font-body text-[#AAA] text-[12px] leading-snug">Where fashion comes full circle</p>
+          </div>
         </div>
 
       </div>

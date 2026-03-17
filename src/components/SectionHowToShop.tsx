@@ -455,107 +455,78 @@ function CartUI() {
     <div ref={ref} className="flex flex-col h-full select-none overflow-hidden">
 
       {/* ── Cart rows ── */}
-      <div className="flex-1 px-4 pt-3 flex flex-col justify-center">
+      <div className="flex-1 px-5 flex flex-col justify-center" style={{ paddingTop: 20, paddingBottom: 4 }}>
 
-        {/* header */}
-        <div className="flex justify-between items-center mb-2">
-          <span style={{ fontFamily: HN, fontSize: 9, fontWeight: 600, color: '#BBB', letterSpacing: '0.07em', textTransform: 'uppercase' }}>
-            My Cart
-          </span>
-          <span style={{ fontFamily: HN, fontSize: 8.5, fontWeight: 600, borderRadius: 99, padding: '2px 8px', backgroundColor: '#EBEBEB', color: '#888' }}>
-            3 items
-          </span>
+        {/* label */}
+        <div style={{ fontFamily: HN, fontSize: 8, fontWeight: 600, color: '#C8C8C8', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 14 }}>
+          My Cart
         </div>
 
-        {/* item rows — layout is always 3 rows, only prices transform */}
+        {/* rows */}
         {CART_ITEMS.map((item, i) => {
-          const rowDelay = i * 0.09
+          const d = i * 0.08
           return (
             <div
               key={item.name}
-              className="flex items-center gap-2.5"
-              style={{ paddingTop: 5, paddingBottom: 5, borderBottom: '1px solid #F2F2F2' }}
+              className="flex items-center gap-3"
+              style={{ paddingTop: 9, paddingBottom: 9, borderBottom: i < 2 ? '1px solid #F4F4F4' : 'none' }}
             >
-              {/* thumbnail */}
-              <div style={{ width: 32, height: 38, borderRadius: 6, backgroundColor: '#EBEBEB', flexShrink: 0 }} />
+              {/* skeleton thumbnail */}
+              <div style={{ width: 28, height: 34, borderRadius: 5, backgroundColor: '#EFEFEF', flexShrink: 0 }} />
 
-              {/* info */}
+              {/* name + size */}
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontFamily: HN, fontSize: 10, fontWeight: 500, color: '#111', lineHeight: 1.2 }}>
-                  {item.name}
-                </div>
-                <div style={{ fontFamily: HN, fontSize: 8, color: '#AAA', marginTop: 1 }}>
-                  {item.desc} · {item.size}
-                </div>
+                <div style={{ fontFamily: HN, fontSize: 10.5, fontWeight: 500, color: '#1A1A1A' }}>{item.name}</div>
+                <div style={{ fontFamily: HN, fontSize: 8, color: '#C0C0C0', marginTop: 1 }}>Size {item.size}</div>
               </div>
 
-              {/* price column — retail fades/strikes, fair badge stamps in */}
-              <div style={{ flexShrink: 0, textAlign: 'right', position: 'relative', minWidth: 56 }}>
-                {/* retail price */}
-                <motion.div
-                  style={{ fontFamily: HN, fontSize: 11, fontWeight: 500 }}
-                  animate={{
-                    color:          isFair ? '#CCC' : '#444',
-                    textDecoration: isFair ? 'line-through' : 'none',
-                  }}
-                  transition={{ duration: 0.28, ease, delay: isFair ? rowDelay : 0 }}
+              {/* price — retail → green badge */}
+              <div style={{ position: 'relative', flexShrink: 0, textAlign: 'right', minWidth: 52 }}>
+                <motion.span
+                  style={{ fontFamily: HN, fontSize: 11, fontWeight: 500, display: 'block' }}
+                  animate={{ color: isFair ? '#CCC' : '#333', textDecoration: isFair ? 'line-through' : 'none' }}
+                  transition={{ duration: 0.22, ease, delay: isFair ? d : 0 }}
                 >
                   {fmtRupee(item.retail)}
-                </motion.div>
-
-                {/* fair price badge — scaleX stamp from right */}
-                <motion.div
+                </motion.span>
+                <motion.span
                   style={{
                     position: 'absolute', right: 0, top: 0,
-                    backgroundColor: GREEN,
-                    borderRadius: 6,
-                    padding: '2px 7px',
-                    boxShadow: 'inset 0 -1.5px 0 rgba(0,0,0,0.18)',
+                    backgroundColor: GREEN, borderRadius: 5, padding: '2px 6px',
                     fontFamily: HN, fontSize: 11, fontWeight: 600, color: '#fff',
-                    letterSpacing: '-0.1px',
-                    originX: 1, originY: 0.5,
-                    whiteSpace: 'nowrap',
+                    boxShadow: 'inset 0 -1px 0 rgba(0,0,0,0.15)',
+                    originX: 1, originY: 0.5, whiteSpace: 'nowrap',
                   }}
                   animate={{ scaleX: isFair ? 1 : 0, opacity: isFair ? 1 : 0 }}
-                  transition={{
-                    type: 'spring', stiffness: 380, damping: 28,
-                    opacity: { duration: 0.1 },
-                    delay: isFair ? rowDelay + 0.06 : 0,
-                  }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 30, opacity: { duration: 0.08 }, delay: isFair ? d + 0.05 : 0 }}
                 >
                   {fmtRupee(item.ctm)}
-                </motion.div>
+                </motion.span>
               </div>
             </div>
           )
         })}
 
-        {/* total row */}
-        <div className="flex justify-between items-center" style={{ paddingTop: 6, marginTop: 1 }}>
-          <span style={{ fontFamily: HN, fontSize: 9, fontWeight: 600, color: '#AAA', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-            Total
-          </span>
-          <div className="flex items-center gap-2">
+        {/* total */}
+        <div className="flex justify-between items-center" style={{ paddingTop: 10 }}>
+          <span style={{ fontFamily: HN, fontSize: 8, fontWeight: 600, color: '#C0C0C0', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Total</span>
+          <div className="flex items-center gap-1.5">
             <motion.span
               style={{ fontFamily: HN, fontSize: 11, fontWeight: 500 }}
-              animate={{ color: isFair ? '#CCC' : '#444', textDecoration: isFair ? 'line-through' : 'none' }}
-              transition={{ duration: 0.28, ease, delay: isFair ? 0.28 : 0 }}
+              animate={{ color: isFair ? '#CCC' : '#333', textDecoration: isFair ? 'line-through' : 'none' }}
+              transition={{ duration: 0.22, ease, delay: isFair ? 0.26 : 0 }}
             >
               {fmtRupee(CART_TOTAL_RETAIL)}
             </motion.span>
             <motion.span
               style={{
-                backgroundColor: GREEN, borderRadius: 7, padding: '3px 9px',
-                boxShadow: 'inset 0 -1.5px 0 rgba(0,0,0,0.18)',
+                backgroundColor: GREEN, borderRadius: 6, padding: '3px 8px',
                 fontFamily: HN, fontSize: 11, fontWeight: 600, color: '#fff',
+                boxShadow: 'inset 0 -1px 0 rgba(0,0,0,0.15)',
                 originX: 1, originY: 0.5,
               }}
               animate={{ scaleX: isFair ? 1 : 0, opacity: isFair ? 1 : 0 }}
-              transition={{
-                type: 'spring', stiffness: 340, damping: 26,
-                opacity: { duration: 0.1 },
-                delay: isFair ? 0.34 : 0,
-              }}
+              transition={{ type: 'spring', stiffness: 360, damping: 28, opacity: { duration: 0.08 }, delay: isFair ? 0.32 : 0 }}
             >
               {fmtRupee(CART_TOTAL_CTM)}
             </motion.span>
@@ -563,34 +534,23 @@ function CartUI() {
         </div>
       </div>
 
-      {/* ── Savings + countdown — slides up when fair ── */}
+      {/* ── savings + countdown ── */}
       <motion.div
-        animate={{ opacity: isFair ? 1 : 0, y: isFair ? 0 : 10 }}
-        transition={{ duration: 0.38, ease, delay: isFair ? 0.44 : 0 }}
+        animate={{ opacity: isFair ? 1 : 0, y: isFair ? 0 : 8 }}
+        transition={{ duration: 0.34, ease, delay: isFair ? 0.42 : 0 }}
       >
-        {/* green savings strip */}
-        <div className="flex items-center justify-between px-4 py-2" style={{ backgroundColor: GREEN }}>
-          <span style={{ fontFamily: HN, fontSize: 10, color: 'rgba(255,255,255,0.82)' }}>
-            You&rsquo;re saving{' '}
-            <span style={{ fontWeight: 600, color: '#fff', fontSize: 11 }}>{fmtRupee(CART_SAVING)}</span>
+        <div className="flex items-center justify-between px-5 py-2" style={{ backgroundColor: GREEN }}>
+          <span style={{ fontFamily: HN, fontSize: 9.5, color: 'rgba(255,255,255,0.85)' }}>
+            You&rsquo;re saving <span style={{ fontWeight: 600, color: '#fff' }}>{fmtRupee(CART_SAVING)}</span>
           </span>
           <EcoNicLogo dark={false} />
         </div>
-        {/* dark countdown */}
-        <div className="flex items-center justify-between px-4 py-2" style={{ backgroundColor: '#111' }}>
+        <div className="flex items-center justify-between px-5 py-2" style={{ backgroundColor: '#111' }}>
           <div>
-            <div style={{ fontFamily: HN, fontSize: 7, color: 'rgba(255,255,255,0.38)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-              Fair starts soon
-            </div>
-            <div style={{ fontFamily: HN, fontSize: 11.5, fontWeight: 600, color: '#fff', letterSpacing: '0.04em', marginTop: 1 }}>
-              {fmtTime(secs)}
-            </div>
+            <div style={{ fontFamily: HN, fontSize: 7, color: 'rgba(255,255,255,0.36)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Fair starts soon</div>
+            <div style={{ fontFamily: HN, fontSize: 11, fontWeight: 600, color: '#fff', letterSpacing: '0.04em', marginTop: 1 }}>{fmtTime(secs)}</div>
           </div>
-          <div style={{
-            backgroundColor: '#fff', borderRadius: 7, padding: '5px 12px',
-            fontFamily: HN, fontSize: 8.5, fontWeight: 600, color: '#111',
-            letterSpacing: '0.04em', textTransform: 'uppercase',
-          }}>
+          <div style={{ backgroundColor: '#fff', borderRadius: 6, padding: '5px 11px', fontFamily: HN, fontSize: 8, fontWeight: 600, color: '#111', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
             Shop in App
           </div>
         </div>
