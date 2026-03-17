@@ -6,21 +6,21 @@ import { CONTENT_MAX_W } from '@/lib/config'
 
 const cards = [
   {
-    image: '/assets/photo-hero.png',
+    image: '/assets/store-2.png',
     title: 'Visit VIRGIO Stores',
     description:
       "If you're near one of our stores, step in for more than just the prices. Expect music, memories, and a little anniversary madness at all our stores.",
     cta: 'Get directions',
   },
   {
-    image: '/assets/photo-editorial.jpg',
+    image: '/assets/btc-2.png',
     title: 'Shop our curve edit',
     description:
       "Beyond The Curve, our brand celebrating curvy women is joining the celebrations too! Shop fearless fits at some really fair prices.",
     cta: 'Shop now',
   },
   {
-    image: '/assets/photo-energy.jpg',
+    image: '/assets/amodira-2.png',
     title: 'Shop AMODIRA',
     description:
       "For the ones who love a touch of luxury discover AMODIRA, our range of perfumes inspired by Indian royalty for men and women.",
@@ -66,7 +66,7 @@ export default function Section3() {
             <div className="flex flex-col flex-1 px-4 pt-3 pb-4 gap-2">
               <h3 className="font-heading text-white text-[1.1rem] leading-tight">{card.title}</h3>
               <p className="font-body text-neutral-400 text-[0.85rem] leading-snug flex-1">{card.description}</p>
-              <button className="mt-1 self-start bg-white text-neutral-900 rounded-full px-4 py-1.5 text-[12px] font-medium transition-opacity hover:opacity-80 active:scale-[0.97]">{card.cta}</button>
+              <button className="mt-1 self-start bg-white text-neutral-900 rounded-full px-4 py-1.5 text-[12px] font-medium transition-opacity duration-300 hover:opacity-70 active:scale-[0.97]">{card.cta}</button>
             </div>
           </SpotlightCard>
         ))}
@@ -85,7 +85,7 @@ export default function Section3() {
             <div className="flex flex-col flex-1 px-4 pt-3 pb-4 gap-2">
               <h3 className="font-heading text-white text-[1.1rem] leading-tight">{card.title}</h3>
               <p className="font-body text-neutral-400 text-[0.85rem] leading-snug flex-1">{card.description}</p>
-              <button className="mt-1 self-start bg-white text-neutral-900 rounded-full px-4 py-1.5 text-[12px] font-medium transition-opacity hover:opacity-80 active:scale-[0.97]">{card.cta}</button>
+              <button className="mt-1 self-start bg-white text-neutral-900 rounded-full px-4 py-1.5 text-[12px] font-medium transition-opacity duration-300 hover:opacity-70 active:scale-[0.97]">{card.cta}</button>
             </div>
           </SpotlightCard>
         ))}

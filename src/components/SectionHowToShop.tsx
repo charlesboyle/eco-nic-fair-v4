@@ -153,8 +153,8 @@ function ToggleUI() {
         </div>
       </motion.div>
 
-      {/* ── Product — fills remaining space, placeholder boxes + animated price ── */}
-      <div className="flex-1 flex flex-col justify-center items-center px-5">
+      {/* ── Product — fills remaining space, price anchored toward center-bottom ── */}
+      <div className="flex-1 flex flex-col justify-end items-center px-5 pb-10">
 
         {/* Skeleton placeholder boxes for product name */}
         <div className="flex flex-col items-center gap-1.5 mb-3">
@@ -200,32 +200,6 @@ function ToggleUI() {
               </AnimatePresence>
             </motion.div>
 
-          </div>
-        </div>
-
-        {/* Skeleton size + qty selectors — fills vertical space, mirrors product page */}
-        <div className="flex gap-2 mt-4">
-          {/* Size pill skeleton */}
-          <div style={{ height: 28, padding: '0 14px', borderRadius: 8, border: '1px solid #E8E8E8', display: 'flex', alignItems: 'center', gap: 6 }}>
-            <div style={{ width: 28, height: 7, borderRadius: 3, backgroundColor: '#EBEBEB' }} />
-            <div style={{ width: 10, height: 7, borderRadius: 3, backgroundColor: '#D5D5D5' }} />
-          </div>
-          {/* Qty stepper skeleton */}
-          <div style={{ height: 28, padding: '0 10px', borderRadius: 8, border: '1px solid #E8E8E8', display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div style={{ width: 8, height: 8, borderRadius: 99, backgroundColor: '#E0E0E0' }} />
-            <div style={{ width: 10, height: 7, borderRadius: 3, backgroundColor: '#D0D0D0' }} />
-            <div style={{ width: 8, height: 8, borderRadius: 99, backgroundColor: '#E0E0E0' }} />
-          </div>
-        </div>
-
-        {/* Remove/wishlist skeleton row */}
-        <div className="flex mt-3" style={{ borderTop: '1px solid #F0F0F0', width: '100%', paddingTop: 10, gap: 0 }}>
-          <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-            <div style={{ width: 48, height: 7, borderRadius: 3, backgroundColor: '#EBEBEB' }} />
-          </div>
-          <div style={{ width: 1, backgroundColor: '#F0F0F0' }} />
-          <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-            <div style={{ width: 80, height: 7, borderRadius: 3, backgroundColor: '#EBEBEB' }} />
           </div>
         </div>
 

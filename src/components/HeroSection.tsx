@@ -103,7 +103,7 @@ export default function HeroSection() {
           <div className="absolute bottom-4 left-0 right-0 flex justify-center z-20">
             <a
               href="#footer-countdown"
-              className="bg-[#0D0D0D] text-white rounded-full px-8 py-3 text-[14px] font-medium font-sans transition-colors hover:bg-[#3a3a3a] active:scale-[0.97] shadow-lg"
+              className="bg-[#0D0D0D] text-white rounded-full px-8 py-3 text-[14px] font-medium font-sans transition-colors duration-300 hover:bg-[#3a3a3a] active:scale-[0.97] shadow-lg"
             >
               Get early access
             </a>

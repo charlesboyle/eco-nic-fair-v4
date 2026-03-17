@@ -140,7 +140,7 @@ export default function FooterCountdown() {
             position: 'relative', zIndex: 1,
           }}>
             <button
-              className="transition-opacity hover:opacity-80 active:scale-[0.97]"
+              className="transition-opacity duration-300 hover:opacity-75 active:scale-[0.97]"
               style={{
                 background: '#0D0D0D',
                 color: '#fff', borderRadius: '100px',
@@ -152,7 +152,7 @@ export default function FooterCountdown() {
               Download the app
             </button>
             <button
-              className="transition-opacity hover:opacity-70 active:scale-[0.97]"
+              className="transition-opacity duration-300 hover:opacity-60 active:scale-[0.97]"
               style={{
                 background: 'transparent',
                 color: '#0D0D0D', borderRadius: '100px',
