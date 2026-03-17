@@ -153,61 +153,56 @@ function ToggleUI() {
         </div>
       </motion.div>
 
-      {/* ── Product — skeleton image fills top, content anchors to card bottom ── */}
-      <div className="flex-1 flex flex-col px-5 pt-3 pb-4">
-
-        {/* Skeleton product image — expands to absorb all available vertical space */}
-        <div className="flex-1 w-full rounded-lg" style={{ backgroundColor: '#F0F0F0', minHeight: 32, marginBottom: 12 }} />
+      {/* ── Product — centered in remaining space ── */}
+      <div className="flex-1 flex flex-col justify-center items-center px-5 gap-3">
 
         {/* Skeleton placeholder boxes for product name */}
-        <div className="flex flex-col items-center gap-1.5 mb-3">
+        <div className="flex flex-col items-center gap-1.5">
           <div className="rounded" style={{ height: 10, width: 110, backgroundColor: '#E5E5E5' }} />
           <div className="rounded" style={{ height: 10, width: 74, backgroundColor: '#E5E5E5' }} />
         </div>
 
         {/* Price — inline-sized so green fill only wraps the price text */}
-        <div className="flex justify-center mb-3">
-          <div className="relative inline-block">
+        <div className="relative inline-block">
 
-            {/* Green stamp bg — scales from left, only as wide as the price */}
-            <motion.div
-              className="absolute inset-0 rounded-xl"
-              style={{
-                backgroundColor: GREEN,
-                originX: 0,
-                originY: 0.5,
-                boxShadow: 'inset 0 -3px 0 rgba(0,0,0,0.2)',
-              }}
-              animate={{ scaleX: on ? 1 : 0, opacity: on ? 1 : 0 }}
-              transition={{ type: 'spring', stiffness: 380, damping: 26, opacity: { duration: 0.15 } }}
-            />
+          {/* Green stamp bg — scales from left, only as wide as the price */}
+          <motion.div
+            className="absolute inset-0 rounded-xl"
+            style={{
+              backgroundColor: GREEN,
+              originX: 0,
+              originY: 0.5,
+              boxShadow: 'inset 0 -3px 0 rgba(0,0,0,0.2)',
+            }}
+            animate={{ scaleX: on ? 1 : 0, opacity: on ? 1 : 0 }}
+            transition={{ type: 'spring', stiffness: 380, damping: 26, opacity: { duration: 0.15 } }}
+          />
 
-            {/* Price number — padding determines the pill size */}
-            <motion.div
-              className="relative z-10 leading-none"
-              style={{ fontFamily: HN, fontSize: '30px', fontWeight: 600, padding: '10px 16px' }}
-              animate={{ color: on ? '#ffffff' : '#111111' }}
-              transition={{ duration: 0.2, delay: on ? 0.08 : 0 }}
-            >
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={on ? 'cost' : 'retail'}
-                  initial={{ opacity: 0, y: on ? 6 : -6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: on ? -6 : 6 }}
-                  transition={{ duration: 0.18 }}
-                  style={{ display: 'block' }}
-                >
-                  {on ? '₹1,290' : '₹2,999'}
-                </motion.span>
-              </AnimatePresence>
-            </motion.div>
+          {/* Price number — padding determines the pill size */}
+          <motion.div
+            className="relative z-10 leading-none"
+            style={{ fontFamily: HN, fontSize: '30px', fontWeight: 600, padding: '10px 16px' }}
+            animate={{ color: on ? '#ffffff' : '#111111' }}
+            transition={{ duration: 0.2, delay: on ? 0.08 : 0 }}
+          >
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={on ? 'cost' : 'retail'}
+                initial={{ opacity: 0, y: on ? 6 : -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: on ? -6 : 6 }}
+                transition={{ duration: 0.18 }}
+                style={{ display: 'block' }}
+              >
+                {on ? '₹1,290' : '₹2,999'}
+              </motion.span>
+            </AnimatePresence>
+          </motion.div>
 
-          </div>
         </div>
 
-        {/* Skeleton size + qty selectors */}
-        <div className="flex justify-center gap-2">
+        {/* Skeleton size + qty outline buttons */}
+        <div className="flex gap-2">
           {/* Size pill */}
           <div style={{ height: 28, padding: '0 14px', borderRadius: 8, border: '1px solid #E8E8E8', display: 'flex', alignItems: 'center', gap: 6 }}>
             <div style={{ width: 28, height: 7, borderRadius: 3, backgroundColor: '#EBEBEB' }} />
@@ -620,10 +615,10 @@ const CARDS = [
 /* ─── Fixed-height illustration wrapper ─── */
 const ILLUSTRATION_H = 284
 
-function Illustration({ type }: { type: 'toggle' | 'cost' | 'cart' }) {
+function Illustration({ type, borderBottom }: { type: 'toggle' | 'cost' | 'cart'; borderBottom?: boolean }) {
   return (
     <div
-      className="border-b border-neutral-100 overflow-hidden relative flex-shrink-0"
+      className={`${borderBottom ? 'border-b border-neutral-100' : ''} overflow-hidden relative flex-shrink-0`}
       style={{ height: ILLUSTRATION_H, backgroundColor: type === 'cost' ? '#F5F5F3' : '#ffffff' }}
     >
       {type === 'toggle' && <ToggleUI />}
@@ -698,7 +693,7 @@ export default function SectionHowToShop() {
               transition={{ delay: i * 0.1, duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
             >
               {contentFirst ? content : null}
-              <Illustration type={card.ui} />
+              <Illustration type={card.ui} borderBottom={!contentFirst} />
               {contentFirst ? null : content}
             </motion.div>
           )
