@@ -150,31 +150,39 @@ export default function FooterCountdown() {
             display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: '10px',
             position: 'relative', zIndex: 1,
           }}>
-            <button
+            <a
+              href="https://virgio.onelink.me/yqcr/1tw9quel"
+              target="_blank"
+              rel="noopener noreferrer"
               className="transition-opacity duration-300 hover:opacity-75 active:scale-[0.97]"
               style={{
+                display: 'block', textAlign: 'center', textDecoration: 'none',
                 background: '#0D0D0D',
                 color: '#fff', borderRadius: '100px',
                 padding: '13px 28px', fontSize: '14px', fontWeight: 500,
                 fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-                cursor: 'pointer', border: 'none', width: '100%',
+                width: '100%', boxSizing: 'border-box',
               }}
             >
               Download the app
-            </button>
-            <button
+            </a>
+            <a
+              href="https://chat.whatsapp.com/Kn5EnWx5WV5IFGMBYir7De"
+              target="_blank"
+              rel="noopener noreferrer"
               className="transition-opacity duration-300 hover:opacity-60 active:scale-[0.97]"
               style={{
+                display: 'block', textAlign: 'center', textDecoration: 'none',
                 background: 'transparent',
                 color: '#0D0D0D', borderRadius: '100px',
                 padding: '13px 28px', fontSize: '14px', fontWeight: 500,
                 fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
                 border: '1.5px solid rgba(0,0,0,0.18)',
-                cursor: 'pointer', width: '100%',
+                width: '100%', boxSizing: 'border-box',
               }}
             >
               Join community
-            </button>
+            </a>
           </div>
         </div>
 
