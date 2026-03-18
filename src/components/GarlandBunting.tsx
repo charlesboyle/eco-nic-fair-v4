@@ -120,53 +120,56 @@ export default function GarlandBunting() {
         aria-hidden="true"
       >
         <style>{`
+          /* Two-keyframe + alternate: browser reverses direction smoothly with zero
+             velocity at both ends — no loop jank, no mid-animation stutter. */
+
           @keyframes g-sway-a {
-            0%, 100% { transform: rotate(0deg); }
-            30%       { transform: rotate(5deg); }
-            65%       { transform: rotate(-5deg); }
+            from { transform: rotate(-5deg); }
+            to   { transform: rotate(5deg); }
           }
           .g-flag {
             transform-box: fill-box;
             transform-origin: top center;
-            animation: g-sway-a 2.8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+            animation: g-sway-a 2.8s ease-in-out infinite alternate;
           }
+
           @keyframes g-sway-b {
-            0%, 100% { transform: rotate(0deg); }
-            35%       { transform: rotate(-4.5deg); }
-            70%       { transform: rotate(4.5deg); }
+            from { transform: rotate(-4.5deg); }
+            to   { transform: rotate(4.5deg); }
           }
           .g-flag-b {
             transform-box: fill-box;
             transform-origin: top center;
-            animation: g-sway-b 3.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+            animation: g-sway-b 3.2s ease-in-out infinite alternate;
           }
+
           @keyframes g1-pendulum {
-            0%, 100% { transform: rotate(0deg); }
-            25%       { transform: rotate(3.5deg); }
-            75%       { transform: rotate(-3deg); }
+            from { transform: rotate(-2.5deg); }
+            to   { transform: rotate(3deg); }
           }
           .g1-group {
             transform-box: view-box;
             transform-origin: 1000px 18px;
-            animation: g1-pendulum 4s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+            animation: g1-pendulum 4s ease-in-out infinite alternate;
           }
+
           @keyframes g2-pendulum {
-            0%, 100% { transform: rotate(0deg); }
-            25%       { transform: rotate(-3deg); }
-            75%       { transform: rotate(2.8deg); }
+            from { transform: rotate(-2.8deg); }
+            to   { transform: rotate(2.5deg); }
           }
           .g2-group {
             transform-box: view-box;
             transform-origin: 0px 28px;
-            animation: g2-pendulum 4.5s cubic-bezier(0.37, 0, 0.63, 1) infinite;
-            animation-delay: 0.8s;
+            animation: g2-pendulum 4.5s ease-in-out infinite alternate;
+            animation-delay: -2.25s;
           }
+
           /* Responsive toggles */
           .g-desktop { display: none; }
-          .g-mobile { display: inline; }
+          .g-mobile  { display: inline; }
           @media (min-width: 768px) {
             .g-desktop { display: inline; }
-            .g-mobile { display: none; }
+            .g-mobile  { display: none; }
           }
         `}</style>
 
