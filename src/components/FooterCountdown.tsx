@@ -88,11 +88,20 @@ export default function FooterCountdown() {
             boxShadow: '0 8px 32px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06)',
           }}
         >
-          {/* Top dash strip — green and mint */}
-          <div style={{ display: 'flex', height: '4px', overflow: 'hidden', borderRadius: '18px 18px 0 0' }}>
-            {Array.from({ length: 20 }).map((_, i) => (
-              <div key={i} style={{ flex: 1, background: i % 2 === 0 ? '#009245' : '#CDDDD4' }} />
-            ))}
+          {/* Top stripe bar — animated sliding */}
+          <div style={{ height: '10px', overflow: 'hidden', borderRadius: '18px 18px 0 0', position: 'relative' }}>
+            <motion.div
+              aria-hidden
+              style={{
+                position: 'absolute',
+                top: 0, bottom: 0,
+                left: '-40px',
+                right: '-40px',
+                backgroundImage: 'repeating-linear-gradient(to right, #009245 0px, #009245 20px, #CDDDD4 20px, #CDDDD4 40px)',
+              }}
+              animate={{ x: [0, 40] }}
+              transition={{ repeat: Infinity, duration: 1.4, ease: 'linear' }}
+            />
           </div>
 
           {/* Blurred stripe glow at bottom — visual flair */}
