@@ -89,7 +89,7 @@ export default function FooterCountdown() {
           }}
         >
           {/* Top stripe bar — animated sliding */}
-          <div style={{ height: '10px', overflow: 'hidden', borderRadius: '18px 18px 0 0', position: 'relative' }}>
+          <div style={{ height: '7px', overflow: 'hidden', borderRadius: '18px 18px 0 0', position: 'relative' }}>
             <motion.div
               aria-hidden
               style={{
@@ -97,7 +97,7 @@ export default function FooterCountdown() {
                 top: 0, bottom: 0,
                 left: '-40px',
                 right: '-40px',
-                backgroundImage: 'repeating-linear-gradient(to right, #009245 0px, #009245 20px, #CDDDD4 20px, #CDDDD4 40px)',
+                backgroundImage: 'repeating-linear-gradient(to right, #009245 0px, #009245 20px, #ffffff 20px, #ffffff 40px)',
               }}
               animate={{ x: [0, 40] }}
               transition={{ repeat: Infinity, duration: 1.4, ease: 'linear' }}
