@@ -1,51 +1,15 @@
 'use client'
 
 import { useRef, useEffect, useState } from 'react'
-import { motion, AnimatePresence, useInView } from 'motion/react'
+import { motion, AnimatePresence } from 'motion/react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import Image from 'next/image'
 import { CONTENT_MAX_W } from '@/lib/config'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const GREEN = '#2B6E3A'
 const BETHANY = "'BethanyElingston', Georgia, serif"
-const HN = '"Helvetica Neue", Helvetica, Arial, sans-serif'
-
-const SHELF_PRODUCTS = [
-  { name: 'Hande', ctm: '₹1,163', img: '/assets/product-hande.webp' },
-  { name: 'Birce', ctm: '₹1,085', img: '/assets/product-birce.webp' },
-  { name: 'Rodel', ctm: '₹1,163', img: '/assets/product-rodel.webp' },
-]
-
-function ProductShelf() {
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-60px' })
-
-  return (
-    <div ref={ref} style={{ display: 'flex', gap: 12, marginTop: 24, marginBottom: 28 }}>
-      {SHELF_PRODUCTS.map((p, i) => (
-        <motion.div
-          key={p.name}
-          initial={{ opacity: 0, y: 16 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-          transition={{ duration: 0.45, ease: [0.25, 0.1, 0.25, 1], delay: i * 0.08 }}
-          style={{ flex: 1, minWidth: 0, borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.10)', position: 'relative', aspectRatio: '3/4' }}
-        >
-          <Image src={p.img} alt={p.name} fill sizes="(max-width: 768px) 33vw, 200px" style={{ objectFit: 'cover' }} />
-          {/* Gradient scrim */}
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%)', pointerEvents: 'none' }} />
-          {/* Label */}
-          <div style={{ position: 'absolute', bottom: 10, left: 10, right: 10, pointerEvents: 'none' }}>
-            <div style={{ fontFamily: HN, fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.75)', lineHeight: 1.2 }}>{p.name}</div>
-            <div style={{ fontFamily: HN, fontSize: 13, fontWeight: 700, color: '#ffffff', letterSpacing: '-0.2px' }}>{p.ctm}</div>
-          </div>
-        </motion.div>
-      ))}
-    </div>
-  )
-}
 
 function W({ children }: { children: string }) {
   return (
@@ -240,8 +204,6 @@ export default function Section2() {
         <p className="font-medium text-[clamp(20px,3vw,28px)] leading-[1.55] text-[#111111]">
           <W>For five days, VIRGIO removes retail margins and sells on Cost-to-Make.</W>
         </p>
-
-        <ProductShelf />
 
         {/* Toggle — scroll-revealed with the same blur effect as the words */}
         <span className="word inline-block mt-6 mb-1">

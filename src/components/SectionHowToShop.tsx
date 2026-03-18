@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, useInView, useMotionValue, useTransform, animate } from 'motion/react'
-import Image from 'next/image'
 
 const AMBER = '#F18C22'
 const GREEN = '#019248'
@@ -229,42 +228,39 @@ const HN = 'Helvetica Neue, Helvetica, sans-serif'
 
 const PRODUCTS = [
   {
-    name: 'Hande',
-    desc: '100% Viscose Back Cut Out Midi Dress',
-    mrp: 1990,
-    ctm: 1163,
-    img: '/assets/product-hande.webp',
+    name: 'Sadia',
+    desc: 'Cotton Butterfly Sleeve Mini',
+    mrp: 1790,
+    ctm: 790,
     pills: [
-      { label: 'Fabric', amt: 580 },
-      { label: 'Labour', amt: 380 },
-      { label: 'Packaging', amt: 155 },
-      { label: 'Taxes', amt: 48 },
+      { label: 'Fabric', amt: 420 },
+      { label: 'Labour', amt: 240 },
+      { label: 'Packaging', amt: 90 },
+      { label: 'Taxes', amt: 40 },
     ],
   },
   {
-    name: 'Birce',
-    desc: '100% Cotton Sweetheart Mini Dress',
-    mrp: 2390,
-    ctm: 1085,
-    img: '/assets/product-birce.webp',
+    name: 'Samna',
+    desc: 'Sweetheart Lace Midi Dress',
+    mrp: 2190,
+    ctm: 990,
     pills: [
-      { label: 'Fabric', amt: 540 },
-      { label: 'Labour', amt: 355 },
-      { label: 'Packaging', amt: 148 },
-      { label: 'Taxes', amt: 42 },
+      { label: 'Fabric', amt: 530 },
+      { label: 'Labour', amt: 320 },
+      { label: 'Packaging', amt: 100 },
+      { label: 'Taxes', amt: 40 },
     ],
   },
   {
-    name: 'Rodel',
-    desc: '100% Cotton Sweetheart Pleated Maxi',
-    mrp: 1990,
-    ctm: 1163,
-    img: '/assets/product-rodel.webp',
+    name: 'Feiza',
+    desc: 'Linen Mandarin Collar Shirt',
+    mrp: 1590,
+    ctm: 690,
     pills: [
-      { label: 'Fabric', amt: 580 },
-      { label: 'Labour', amt: 380 },
-      { label: 'Packaging', amt: 155 },
-      { label: 'Taxes', amt: 48 },
+      { label: 'Fabric', amt: 360 },
+      { label: 'Labour', amt: 220 },
+      { label: 'Packaging', amt: 75 },
+      { label: 'Taxes', amt: 35 },
     ],
   },
 ]
@@ -333,15 +329,10 @@ function CostBreakdownUI() {
                     exit={{ opacity: 0, y: -5 }}
                     transition={{ duration: 0.28, ease }}
                   >
-                    {/* Name + desc + thumbnail */}
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-                      <div style={{ flex: 1, fontFamily: HN, lineHeight: 1.3 }}>
-                        <div style={{ fontSize: 12.5, fontWeight: 500, color: '#111' }}>{p.name}</div>
-                        <div style={{ fontSize: 10.5, fontWeight: 400, color: '#888', marginTop: 1 }}>{p.desc}</div>
-                      </div>
-                      <div style={{ width: 32, height: 40, borderRadius: 6, overflow: 'hidden', flexShrink: 0 }}>
-                        <Image src={p.img} alt={p.name} width={32} height={40} style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
-                      </div>
+                    {/* Name + desc — same line, weight contrast */}
+                    <div style={{ fontFamily: HN, fontSize: 12.5, lineHeight: 1.3 }}>
+                      <span style={{ fontWeight: 500, color: '#111' }}>{p.name}</span>
+                      <span style={{ fontWeight: 400, color: '#666', marginLeft: 5 }}>{p.desc}</span>
                     </div>
 
                     {/* MRP — contrasted strikethrough */}
@@ -428,12 +419,12 @@ function CostBreakdownUI() {
 /* ─── Card 3: Cart ─── */
 
 const CART_ITEMS_DATA = [
-  { name: 'Hande', desc: '100% Viscose Back Cut Out Midi',  ctm: 1163, img: '/assets/product-hande.webp' },
-  { name: 'Birce', desc: '100% Cotton Sweetheart Mini',     ctm: 1085, img: '/assets/product-birce.webp' },
-  { name: 'Rodel', desc: '100% Cotton Sweetheart Pleated',  ctm: 1163, img: '/assets/product-rodel.webp' },
+  { name: 'Astrid', ctm: 1290 },
+  { name: 'Sadia',  ctm: 790  },
+  { name: 'Feiza',  ctm: 690  },
 ]
 // Running totals as each item is added: [0, 1, 2, 3 items]
-const CTM_TOTALS = [0, 1163, 2248, 3411]
+const CTM_TOTALS = [0, 1290, 2080, 2770]
 
 function CartUI() {
   const [count, setCount] = useState(0)
@@ -493,10 +484,8 @@ function CartUI() {
                 exit={{ opacity: 0, y: -4 }}
                 transition={{ duration: 0.28, ease }}
               >
-                {/* Product image */}
-                <div style={{ width: 38, height: 46, borderRadius: 7, overflow: 'hidden', flexShrink: 0 }}>
-                  <Image src={item.img} alt={item.name} width={38} height={46} style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
-                </div>
+                {/* Skeleton thumbnail */}
+                <div style={{ width: 38, height: 46, borderRadius: 7, backgroundColor: '#EBEBEB', flexShrink: 0 }} />
 
                 {/* Name + size/qty chips */}
                 <div className="flex-1 min-w-0 flex flex-col gap-1.5">
@@ -573,7 +562,7 @@ function CartUI() {
         {/* Retail comparison — static, shows savings potential */}
         <div style={{ textAlign: 'center', marginTop: 7, fontFamily: HN, fontSize: 10.5, color: '#BBBBBB' }}>
           Today&rsquo;s Cart Value:{' '}
-          <span style={{ color: '#AAAAAA', textDecoration: 'line-through' }}>₹6,370</span>
+          <span style={{ color: '#AAAAAA', textDecoration: 'line-through' }}>₹5,480</span>
         </div>
 
       </div>
