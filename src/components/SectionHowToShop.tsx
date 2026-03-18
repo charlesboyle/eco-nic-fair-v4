@@ -625,7 +625,7 @@ function Illustration({ type, borderBottom }: { type: 'toggle' | 'cost' | 'cart'
 
 export default function SectionHowToShop() {
   return (
-    <section className="bg-[#F5F0E8] py-16 md:py-24">
+    <section className="pt-16 md:pt-24 pb-8" style={{ background: 'linear-gradient(to bottom, #F5F0E8 0%, #ffffff 100%)' }}>
 
       {/* Heading */}
       <motion.div
@@ -648,13 +648,12 @@ export default function SectionHowToShop() {
 
       {/* Unified scroll carousel — 268px on mobile, 340px on md+ */}
       <div
-        className="flex gap-4 overflow-x-auto pb-4 pl-6 pr-6 md:pl-14 md:pr-14 md:justify-center md:overflow-x-visible"
+        className="flex gap-4 overflow-x-auto pb-6 pl-6 pr-6 md:pl-14 md:pr-14 md:justify-center md:overflow-x-visible"
         style={{
           scrollSnapType: 'x mandatory',
           scrollPaddingLeft: '1.5rem',
           WebkitOverflowScrolling: 'touch',
           scrollbarWidth: 'none',
-          overflowY: 'hidden',
         }}
       >
         {CARDS.map((card, i) => {

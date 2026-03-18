@@ -35,22 +35,18 @@ export default function Section3() {
   useEffect(() => {
     const el = mobileScrollRef.current
     if (!el) return
-    // Scroll to middle card on mount
-    const cards = el.querySelectorAll<HTMLElement>(':scope > *')
-    const mid = cards[1]
-    if (mid) {
-      el.scrollLeft = mid.offsetLeft - (el.offsetWidth - mid.offsetWidth) / 2
-    }
+    // Start at first card
+    el.scrollLeft = 0
   }, [])
 
   return (
-    <section className="bg-white py-16 md:py-24">
+    <section className="bg-white pt-16 pb-16 md:pt-24 md:pb-24">
       {/* Title */}
       <div className="px-6 md:px-14 mb-10 w-full mx-auto max-w-5xl text-center">
-        <p className="font-heading text-[clamp(26px,4.5vw,44px)] font-normal leading-tight text-[#555555] mb-2">
+        <p className="font-heading text-[clamp(22px,3.5vw,36px)] font-normal leading-tight text-[#555555] mb-2">
           It's going to be
         </p>
-        <h2 className="font-heading text-[clamp(32px,6vw,62px)] font-normal leading-[1.05] text-[#111111]">
+        <h2 className="font-heading text-[clamp(32px,5vw,56px)] font-normal leading-[1.05] text-[#111111]">
           A fair to remember
         </h2>
       </div>
@@ -89,7 +85,7 @@ export default function Section3() {
       </div>
 
       {/* Desktop: centered grid filling page margins */}
-      <div className="hidden md:flex justify-center gap-4 px-14 mx-auto max-w-5xl">
+      <div className="hidden md:flex gap-4 px-14 mx-auto max-w-5xl">
         {cards.map((card) => (
           <SpotlightCard
             key={card.title}

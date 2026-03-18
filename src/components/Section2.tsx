@@ -38,7 +38,7 @@ function StackCard({ data }: { data: typeof STACK_CARDS_DATA[0] }) {
       {/* Pill lives on the card — stays in sync with toggle via context */}
       <div
         className="absolute left-0 right-0 flex justify-center"
-        style={{ bottom: 60, pointerEvents: 'none', zIndex: 10 }}
+        style={{ bottom: 36, pointerEvents: 'none', zIndex: 10 }}
       >
         <div
           style={{
@@ -52,7 +52,7 @@ function StackCard({ data }: { data: typeof STACK_CARDS_DATA[0] }) {
             justifyContent: 'space-between',
             backgroundColor: open ? 'rgba(0,0,0,0.95)' : 'rgba(0,0,0,0.56)',
             boxShadow: open
-              ? 'inset 0 0 0 2.5px rgba(80,200,110,0.85)'
+              ? 'inset 0 0 0 1px rgba(80,200,110,0.85)'
               : 'inset 0 0 0 0.5px rgba(255,255,255,0.22)',
             transition: 'background-color 0.38s cubic-bezier(0.4,0,0.2,1)',
           }}
@@ -83,7 +83,7 @@ function W({ children }: { children: string }) {
     <>
       {children.split(/(\s+)/).map((part, i) =>
         part.match(/^\s+$/) ? part : (
-          <span key={i} className="word inline-block">{part}</span>
+          <span key={i} className="word inline-block" style={{ opacity: 0 }}>{part}</span>
         )
       )}
     </>
@@ -241,21 +241,21 @@ export default function Section2() {
       >
 
         {/* Headings */}
-        <p className="font-heading text-[clamp(26px,4.5vw,44px)] font-normal leading-tight text-[#555555] mt-4 mb-2">
+        <p className="font-heading text-[clamp(26px,4.5vw,44px)] font-normal leading-tight text-[#555555] mt-4 mb-2" style={{ textWrap: 'balance' } as React.CSSProperties}>
           <W>Most sales cut prices,</W>
         </p>
-        <p className="font-heading text-[clamp(32px,6vw,62px)] font-normal leading-[1.05] text-[#111111] mb-8">
+        <p className="font-heading text-[clamp(32px,6vw,62px)] font-normal leading-[1.05] text-[#111111] mb-8" style={{ textWrap: 'balance' } as React.CSSProperties}>
           <W>We cut the markup</W>
         </p>
 
         {/* Body copy — consistent mb-5 spacing throughout */}
-        <p className="font-body text-[clamp(16px,1.8vw,20px)] leading-[1.5] text-[#555555] mb-5 max-w-2xl">
+        <p className="font-body text-[clamp(16px,1.8vw,20px)] leading-[1.5] text-[#555555] mb-5 max-w-2xl" style={{ textWrap: 'pretty' } as React.CSSProperties}>
           <W>Last year, we took a massive bet, something most fashion brands would run from. We launched India&apos;s first Cost-to-Make Fashion Fair. No margins. No mark-ups.</W>
         </p>
-        <p className="font-body text-[clamp(16px,1.8vw,20px)] leading-[1.5] text-[#555555] mb-5 max-w-2xl">
+        <p className="font-body text-[clamp(16px,1.8vw,20px)] leading-[1.5] text-[#555555] mb-5 max-w-2xl" style={{ textWrap: 'pretty' } as React.CSSProperties}>
           <W>The response was overwhelming. So we&apos;re bringing it back.</W>
         </p>
-        <p className="font-medium text-[clamp(20px,3vw,28px)] leading-[1.15] text-[#111111] mb-0 max-w-2xl">
+        <p className="font-medium text-[clamp(20px,3vw,28px)] leading-[1.15] text-[#111111] mb-0 max-w-2xl" style={{ textWrap: 'balance' } as React.CSSProperties}>
           <W>For five days, we remove all margins and sell at Cost-to-Make</W>
         </p>
 
@@ -296,20 +296,20 @@ export default function Section2() {
             }}
             transition={{ duration: 0.45, ease: [0.25, 0.1, 0.25, 1], delay: open ? 0.07 : 0 }}
           >
-            <p className="font-body font-medium text-[clamp(20px,3vw,28px)] leading-[1.55] text-[#111111] my-5 max-w-2xl">
+            <p className="font-body font-medium text-[clamp(20px,3vw,28px)] leading-[1.55] text-[#111111] my-5 max-w-2xl" style={{ textWrap: 'pretty' } as React.CSSProperties}>
               You&apos;ll see exactly what it takes to create your clothes and <span className="font-sub italic">you&apos;ll pay only for that.</span>
             </p>
-            <p className="font-body font-medium text-[clamp(20px,3vw,28px)] leading-[1.55] text-[#111111] my-5 max-w-2xl">
+            <p className="font-body font-medium text-[clamp(20px,3vw,28px)] leading-[1.55] text-[#111111] my-5 max-w-2xl" style={{ textWrap: 'pretty' } as React.CSSProperties}>
               That&apos;s Fabric. Labour. Packaging. Logistics.
             </p>
-            <p className="font-body font-medium text-[clamp(20px,3vw,28px)] leading-[1.55] text-[#111111] mb-10 max-w-2xl">
+            <p className="font-body font-medium text-[clamp(20px,3vw,28px)] leading-[1.55] text-[#111111] mb-10 max-w-2xl" style={{ textWrap: 'pretty' } as React.CSSProperties}>
               The rest is on us.
             </p>
           </motion.div>
         </motion.div>
 
         {/* CTA */}
-        <p className="font-heading text-[clamp(22px,3.5vw,36px)] font-normal leading-tight text-[#111111] mt-10 mb-5">
+        <p className="font-heading text-[clamp(22px,3.5vw,36px)] font-normal leading-tight text-[#111111] mt-10 mb-5" style={{ textWrap: 'balance' } as React.CSSProperties}>
           <W>Shop before everyone else with Early Access</W>
         </p>
 

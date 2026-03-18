@@ -17,7 +17,7 @@ export default function HeroSection() {
         {/* Logo capsule */}
         <div className="relative flex justify-center">
           <motion.div
-            className="absolute top-0 w-[148px] md:w-[196px] h-full bg-white rounded-b-[16px] z-10 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.10)]"
+            className="absolute top-0 w-[168px] md:w-[196px] h-full bg-white rounded-b-[16px] z-10 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.10)]"
             initial={{ opacity: 0, scaleY: 0.8 }}
             animate={{ opacity: 1, scaleY: 1 }}
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
@@ -34,7 +34,7 @@ export default function HeroSection() {
               alt="Éco-nic"
               width={170}
               height={200}
-              className="w-[126px] md:w-[170px]"
+              className="w-[144px] md:w-[170px]"
               style={{ height: 'auto' }}
               priority
             />
