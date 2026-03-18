@@ -113,7 +113,7 @@ export default function FooterCountdown() {
               height: 90,
               backgroundImage: 'repeating-linear-gradient(to right, #009245 0px, #009245 20px, #F18C22 20px, #F18C22 40px)',
               filter: 'blur(20px)',
-              opacity: 0.13,
+              opacity: 0.065,
               maskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)',
               WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)',
               pointerEvents: 'none',
@@ -179,7 +179,7 @@ export default function FooterCountdown() {
         </div>
 
         {/* Footer disclaimer */}
-        <div className="flex flex-col items-center justify-center gap-3 pt-8 w-full" style={{ borderTop: '1px solid rgba(0,0,0,0.10)' }}>
+        <div className="flex flex-col items-center justify-center gap-3 pt-8 w-full">
           <Image
             src="/assets/eco-nic-logo.svg"
             alt="Éco-nic"
