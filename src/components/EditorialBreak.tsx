@@ -14,9 +14,9 @@ export default function EditorialBreak() {
         style={{
           position: 'absolute',
           inset: '-15%',
-          backgroundImage: 'url(/assets/vir-eco.jpeg)',
+          backgroundImage: 'url(/assets/VIRGIO%208.jpeg)',
           backgroundSize: 'cover',
-          backgroundPosition: 'center 30%',
+          backgroundPosition: 'center 40%',
           y,
         }}
       />

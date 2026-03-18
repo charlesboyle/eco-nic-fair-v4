@@ -52,11 +52,11 @@ export default function HeroSection() {
           <GarlandBunting />
         </motion.div>
 
-        {/* Heading + desktop CTA */}
-        <div className="relative z-10 flex flex-col items-center px-6 pt-6 pb-8 md:pb-20">
+        {/* Heading + desktop CTA — flex-1 so it fills remaining space and centres vertically on desktop */}
+        <div className="relative z-10 flex flex-col items-center px-6 pt-6 pb-8 md:flex-1 md:justify-center md:pt-4 md:pb-16">
           <motion.h1
             className="font-heading text-[#111111] leading-[1.1] mb-6 w-full"
-            style={{ fontSize: 'clamp(42px, 5vw, 58px)' }}
+            style={{ fontSize: 'clamp(50px, 5vw, 58px)' }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, delay: 0.4, ease: [0.25, 0.1, 0.25, 1] }}

@@ -648,7 +648,7 @@ export default function SectionHowToShop() {
 
       {/* Unified scroll carousel — 268px on mobile, 340px on md+ */}
       <div
-        className="flex gap-4 overflow-x-auto pb-4 pl-6 pr-6 md:pl-14 md:pr-14"
+        className="flex gap-4 overflow-x-auto pb-4 pl-6 pr-6 md:pl-14 md:pr-14 md:justify-center md:overflow-x-visible"
         style={{
           scrollSnapType: 'x mandatory',
           scrollPaddingLeft: '1.5rem',
@@ -687,8 +687,8 @@ export default function SectionHowToShop() {
             </div>
           )
         })}
-        {/* Trailing spacer so last card doesn't sit flush against viewport */}
-        <div className="flex-shrink-0 w-6 md:w-14" />
+        {/* Trailing spacer on mobile only — desktop uses justify-center so no spacer needed */}
+        <div className="flex-shrink-0 w-6 md:hidden" />
       </div>
 
     </section>

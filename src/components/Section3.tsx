@@ -1,5 +1,6 @@
 'use client'
 
+import { useRef, useEffect } from 'react'
 import Image from 'next/image'
 import SpotlightCard from '@/components/SpotlightCard'
 import { CONTENT_MAX_W } from '@/lib/config'
@@ -29,6 +30,19 @@ const cards = [
 ]
 
 export default function Section3() {
+  const mobileScrollRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = mobileScrollRef.current
+    if (!el) return
+    // Scroll to middle card on mount
+    const cards = el.querySelectorAll<HTMLElement>(':scope > *')
+    const mid = cards[1]
+    if (mid) {
+      el.scrollLeft = mid.offsetLeft - (el.offsetWidth - mid.offsetWidth) / 2
+    }
+  }, [])
+
   return (
     <section className="bg-white py-16 md:py-24">
       {/* Title */}
@@ -43,6 +57,7 @@ export default function Section3() {
 
       {/* Mobile: horizontal scroll */}
       <div
+        ref={mobileScrollRef}
         className="flex md:hidden gap-4 overflow-x-auto pb-4"
         style={{
           scrollSnapType: 'x mandatory',
@@ -59,7 +74,7 @@ export default function Section3() {
             key={card.title}
             className="flex-shrink-0 w-[280px] flex flex-col !p-0 overflow-hidden"
             style={{ scrollSnapAlign: 'start' } as React.CSSProperties}
-            spotlightColor="rgba(0, 146, 69, 0.28)"
+            spotlightColor="rgba(1, 146, 72, 0.28)"
           >
             <div className="relative w-full aspect-[4/3] overflow-hidden">
               <Image src={card.image} alt={card.title} fill sizes="280px" className="object-cover" />
@@ -74,12 +89,12 @@ export default function Section3() {
       </div>
 
       {/* Desktop: centered grid filling page margins */}
-      <div className="hidden md:flex gap-4 px-14 mx-auto max-w-5xl">
+      <div className="hidden md:flex justify-center gap-4 px-14 mx-auto max-w-5xl">
         {cards.map((card) => (
           <SpotlightCard
             key={card.title}
             className="flex-1 flex flex-col !p-0 overflow-hidden"
-            spotlightColor="rgba(0, 146, 69, 0.28)"
+            spotlightColor="rgba(1, 146, 72, 0.28)"
           >
             <div className="relative w-full aspect-[4/3] overflow-hidden">
               <Image src={card.image} alt={card.title} fill sizes="400px" className="object-cover" />

@@ -38,26 +38,24 @@ function StackCard({ data }: { data: typeof STACK_CARDS_DATA[0] }) {
       {/* Pill lives on the card — stays in sync with toggle via context */}
       <div
         className="absolute left-0 right-0 flex justify-center"
-        style={{ bottom: 38, pointerEvents: 'none', zIndex: 10 }}
+        style={{ bottom: 60, pointerEvents: 'none', zIndex: 10 }}
       >
-        <motion.div
+        <div
           style={{
             borderRadius: 100,
             padding: '5px 14px',
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
-            width: 132,
+            width: 120,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-          }}
-          animate={{
-            backgroundColor: open ? 'rgba(0,0,0,0.92)' : 'rgba(0,0,0,0.56)',
+            backgroundColor: open ? 'rgba(0,0,0,0.95)' : 'rgba(0,0,0,0.56)',
             boxShadow: open
-              ? 'inset 0 0 0 2px rgba(80,200,110,0.82)'
+              ? 'inset 0 0 0 2.5px rgba(80,200,110,0.85)'
               : 'inset 0 0 0 0.5px rgba(255,255,255,0.22)',
+            transition: 'background-color 0.38s cubic-bezier(0.4,0,0.2,1)',
           }}
-          transition={{ duration: 0.38, ease: [0.4, 0, 0.2, 1] }}
         >
           <span style={{ fontFamily: HN, fontSize: 10, fontWeight: 500, color: 'rgba(255,255,255,0.55)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
             {data.name}
@@ -74,7 +72,7 @@ function StackCard({ data }: { data: typeof STACK_CARDS_DATA[0] }) {
               ₹{(open ? data.ctm : data.retail).toLocaleString('en-IN')}
             </motion.span>
           </AnimatePresence>
-        </motion.div>
+        </div>
       </div>
     </div>
   )
@@ -257,7 +255,7 @@ export default function Section2() {
         <p className="font-body text-[clamp(16px,1.8vw,20px)] leading-[1.5] text-[#555555] mb-5 max-w-2xl">
           <W>The response was overwhelming. So we&apos;re bringing it back.</W>
         </p>
-        <p className="font-medium text-[clamp(20px,3vw,28px)] leading-[1.55] text-[#111111] mb-0 max-w-2xl">
+        <p className="font-medium text-[clamp(20px,3vw,28px)] leading-[1.15] text-[#111111] mb-0 max-w-2xl">
           <W>For five days, we remove all margins and sell at Cost-to-Make</W>
         </p>
 
