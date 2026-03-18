@@ -194,13 +194,14 @@ export default function Section2() {
 
         {/* Always-visible body copy */}
         <p className="font-body text-[clamp(16px,1.8vw,20px)] leading-[1.7] text-[#555555] my-5">
-          <W>Last year, VIRGIO launched India's first Cost-to-Make Fashion Fair.</W>
+          <W>Last year, VIRGIO launched India's first Cost-to-Make Fashion Fair. No margins. No mark-ups. Just the truth behind the price.</W>
           <br />
-          <W>No margins. No mark-ups. Just the truth behind the price.</W>
-          <br />
-          <W>The response was overwhelming. So we're bringing it back.</W>
         </p>
         <p className="font-body text-[clamp(16px,1.8vw,20px)] leading-[1.7] text-[#555555] my-5">
+
+          <W>The response was overwhelming. So we're bringing it back.</W>
+        </p>
+        <p className="font-medium text-[clamp(20px,3vw,28px)] leading-[1.55] text-[#111111]">
           <W>For five days, VIRGIO removes retail margins and sells on Cost-to-Make.</W>
         </p>
 
