@@ -15,8 +15,8 @@ const playfairDisplay = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Éco-nic Fair '26",
-  description: "27–31 March · India's sustainable fashion fair",
+  title: "Eco-nic Fair '26",
+  description: "27–31 March · India's first Cost-to-Make fashion fair",
 };
 
 export default function RootLayout({
