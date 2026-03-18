@@ -151,7 +151,7 @@ export default function FooterCountdown() {
             position: 'relative', zIndex: 1,
           }}>
             <a
-              href="https://virgio.onelink.me/yqcr/1tw9quel"
+              href="https://chat.whatsapp.com/Kn5EnWx5WV5IFGMBYir7De"
               target="_blank"
               rel="noopener noreferrer"
               className="transition-opacity duration-300 hover:opacity-75 active:scale-[0.97]"
@@ -164,30 +164,13 @@ export default function FooterCountdown() {
                 width: '100%', boxSizing: 'border-box',
               }}
             >
-              Download the app
-            </a>
-            <a
-              href="https://chat.whatsapp.com/Kn5EnWx5WV5IFGMBYir7De"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-opacity duration-300 hover:opacity-60 active:scale-[0.97]"
-              style={{
-                display: 'block', textAlign: 'center', textDecoration: 'none',
-                background: 'transparent',
-                color: '#0D0D0D', borderRadius: '100px',
-                padding: '13px 28px', fontSize: '14px', fontWeight: 500,
-                fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-                border: '1.5px solid rgba(0,0,0,0.18)',
-                width: '100%', boxSizing: 'border-box',
-              }}
-            >
               Join community
             </a>
           </div>
         </div>
 
-        {/* Footer disclaimer */}
-        <div className="flex flex-col items-center justify-center gap-3 pt-8 w-full">
+        {/* Footer logo only */}
+        <div className="flex flex-col items-center justify-center pt-8 w-full">
           <Image
             src="/assets/eco-nic-logo.svg"
             alt="Éco-nic"
@@ -195,10 +178,6 @@ export default function FooterCountdown() {
             height={72}
             style={{ width: 72, height: 'auto' }}
           />
-          <div className="text-center">
-            <p className="font-body text-[#AAA] text-[12px] leading-snug">© 2026 VIRGIO</p>
-            <p className="font-body text-[#AAA] text-[12px] leading-snug">Where fashion comes full circle</p>
-          </div>
         </div>
 
       </div>

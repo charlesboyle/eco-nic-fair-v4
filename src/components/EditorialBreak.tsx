@@ -9,14 +9,14 @@ export default function EditorialBreak() {
   const y = useTransform(scrollYProgress, [0, 1], ['-8%', '8%'])
 
   return (
-    <section ref={ref} style={{ position: 'relative', height: '62vh', overflow: 'hidden' }}>
+    <section ref={ref} style={{ position: 'relative', height: '46vh', overflow: 'hidden' }}>
       <motion.div
         style={{
           position: 'absolute',
           inset: '-15%',
-          backgroundImage: 'url(/assets/editorial-break.jpeg)',
+          backgroundImage: 'url(/assets/vir-eco.jpeg)',
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundPosition: 'center 30%',
           y,
         }}
       />

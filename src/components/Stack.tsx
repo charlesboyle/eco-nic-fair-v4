@@ -53,6 +53,7 @@ interface StackProps {
   pauseOnHover?: boolean;
   mobileClickOnly?: boolean;
   mobileBreakpoint?: number;
+  onCardChange?: (index: number) => void;
 }
 
 export default function Stack({
@@ -65,7 +66,8 @@ export default function Stack({
   autoplayDelay = 3000,
   pauseOnHover = false,
   mobileClickOnly = false,
-  mobileBreakpoint = 768
+  mobileBreakpoint = 768,
+  onCardChange,
 }: StackProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -144,6 +146,8 @@ export default function Stack({
       const index = newStack.findIndex(card => card.id === id);
       const [card] = newStack.splice(index, 1);
       newStack.unshift(card);
+      // Report the new top card's original index (id is 1-based)
+      onCardChange?.(newStack[newStack.length - 1].id - 1);
       return newStack;
     });
   };

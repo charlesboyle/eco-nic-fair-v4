@@ -11,8 +11,8 @@ export default function Home() {
     <main>
       <HeroSection />
       <Section2 />
-      <PhotoStrip />
       <SectionHowToShop />
+      <PhotoStrip />
       <Section3 />
       <EditorialBreak />
       <FooterCountdown />

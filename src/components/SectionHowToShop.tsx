@@ -340,7 +340,7 @@ function CostBreakdownUI() {
                         <div style={{ fontSize: 10.5, fontWeight: 400, color: '#888', marginTop: 1 }}>{p.desc}</div>
                       </div>
                       <div style={{ width: 32, height: 40, borderRadius: 6, overflow: 'hidden', flexShrink: 0 }}>
-                        <Image src={p.img} alt={p.name} width={32} height={40} style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
+                        <Image src={p.img} alt={p.name} width={32} height={40} style={{ objectFit: 'cover', objectPosition: 'top', width: '100%', height: '100%' }} />
                       </div>
                     </div>
 
@@ -495,7 +495,7 @@ function CartUI() {
               >
                 {/* Product image */}
                 <div style={{ width: 38, height: 46, borderRadius: 7, overflow: 'hidden', flexShrink: 0 }}>
-                  <Image src={item.img} alt={item.name} width={38} height={46} style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
+                  <Image src={item.img} alt={item.name} width={38} height={46} style={{ objectFit: 'cover', objectPosition: 'top', width: '100%', height: '100%' }} />
                 </div>
 
                 {/* Name + size/qty chips */}
@@ -629,26 +629,26 @@ export default function SectionHowToShop() {
 
       {/* Heading */}
       <motion.div
-        className="px-6 md:px-14 mb-10"
+        className="px-6 md:px-14 mb-10 text-center"
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-60px' }}
         transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
       >
         <p
-          className="leading-tight text-[#888] mb-1"
-          style={{ fontFamily: 'Helvetica Neue, Helvetica, sans-serif', fontSize: 'clamp(15px,2.2vw,20px)' }}
+          className="leading-tight text-[#666] mb-2"
+          style={{ fontFamily: "'BethanyElingston', Georgia, serif", fontSize: 'clamp(20px,2.8vw,28px)' }}
         >
-          How it works
+          Fair pricing before the fair
         </p>
         <h2 className="font-heading text-[clamp(32px,5vw,56px)] leading-[1.05] text-[#111]">
-          Fair pricing before the fair
+          How it works
         </h2>
       </motion.div>
 
       {/* Unified scroll carousel — 268px on mobile, 340px on md+ */}
       <div
-        className="flex gap-4 overflow-x-auto pb-4 pl-6 md:pl-14"
+        className="flex gap-4 overflow-x-auto pb-4 pl-6 pr-6 md:pl-14 md:pr-14"
         style={{
           scrollSnapType: 'x mandatory',
           scrollPaddingLeft: '1.5rem',
@@ -676,19 +676,15 @@ export default function SectionHowToShop() {
             </div>
           )
           return (
-            <motion.div
+            <div
               key={card.title}
               className="flex-shrink-0 w-[268px] md:w-[340px] bg-white rounded-lg border border-black/[0.06] shadow-[0_2px_16px_rgba(0,0,0,0.06)] overflow-hidden flex flex-col"
               style={{ scrollSnapAlign: 'start' }}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ delay: i * 0.1, duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
             >
               {contentFirst ? content : null}
               <Illustration type={card.ui} borderBottom={!contentFirst} />
               {contentFirst ? null : content}
-            </motion.div>
+            </div>
           )
         })}
         {/* Trailing spacer so last card doesn't sit flush against viewport */}

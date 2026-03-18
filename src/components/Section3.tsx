@@ -32,7 +32,7 @@ export default function Section3() {
   return (
     <section className="bg-white py-16 md:py-24">
       {/* Title */}
-      <div className="px-6 md:px-14 mb-10 w-full mx-auto max-w-5xl md:text-center">
+      <div className="px-6 md:px-14 mb-10 w-full mx-auto max-w-5xl text-center">
         <p className="font-heading text-[clamp(26px,4.5vw,44px)] font-normal leading-tight text-[#555555] mb-2">
           It's going to be
         </p>
@@ -59,6 +59,7 @@ export default function Section3() {
             key={card.title}
             className="flex-shrink-0 w-[280px] flex flex-col !p-0 overflow-hidden"
             style={{ scrollSnapAlign: 'start' } as React.CSSProperties}
+            spotlightColor="rgba(0, 146, 69, 0.28)"
           >
             <div className="relative w-full aspect-[4/3] overflow-hidden">
               <Image src={card.image} alt={card.title} fill sizes="280px" className="object-cover" />
@@ -78,6 +79,7 @@ export default function Section3() {
           <SpotlightCard
             key={card.title}
             className="flex-1 flex flex-col !p-0 overflow-hidden"
+            spotlightColor="rgba(0, 146, 69, 0.28)"
           >
             <div className="relative w-full aspect-[4/3] overflow-hidden">
               <Image src={card.image} alt={card.title} fill sizes="400px" className="object-cover" />

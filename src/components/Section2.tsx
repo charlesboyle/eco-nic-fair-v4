@@ -1,45 +1,81 @@
 'use client'
 
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, createContext, useContext, useMemo } from 'react'
 import { motion, AnimatePresence, useInView } from 'motion/react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Image from 'next/image'
+import Stack from '@/components/Stack'
 import { CONTENT_MAX_W } from '@/lib/config'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const GREEN = '#2B6E3A'
 const BETHANY = "'BethanyElingston', Georgia, serif"
 const HN = '"Helvetica Neue", Helvetica, Arial, sans-serif'
 
-const SHELF_PRODUCTS = [
-  { name: 'Hande', ctm: '₹1,163', img: '/assets/product-hande.webp' },
-  { name: 'Birce', ctm: '₹1,085', img: '/assets/product-birce.webp' },
-  { name: 'Rodel', ctm: '₹1,163', img: '/assets/product-rodel.webp' },
+const sizes = '(max-width: 640px) 80vw, 300px'
+
+/* ─── Stack cards for Section 2 ─── */
+const STACK_CARDS_DATA = [
+  { src: '/assets/VIRGIO 7.jpeg',       name: 'Kyla',  retail: 1390, ctm: 684  },
+  { src: '/assets/photo-narrative.jpg', name: 'Ceyda', retail: 1990, ctm: 1116 },
+  { src: '/assets/VIRGIO 5.jpeg',       name: 'Olmia', retail: 1590, ctm: 922  },
 ]
 
-function ProductShelf() {
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-60px' })
+const ToggleContext = createContext(false)
+
+function StackCard({ data }: { data: typeof STACK_CARDS_DATA[0] }) {
+  const open = useContext(ToggleContext)
   return (
-    <div ref={ref} style={{ display: 'flex', gap: 12, marginTop: 24, marginBottom: 28 }}>
-      {SHELF_PRODUCTS.map((p, i) => (
+    <div className="relative w-full h-full">
+      <Image
+        src={data.src}
+        alt={data.name}
+        fill
+        sizes={sizes}
+        className="object-cover object-top pointer-events-none"
+      />
+      {/* Pill lives on the card — stays in sync with toggle via context */}
+      <div
+        className="absolute left-0 right-0 flex justify-center"
+        style={{ bottom: 38, pointerEvents: 'none', zIndex: 10 }}
+      >
         <motion.div
-          key={p.name}
-          initial={{ opacity: 0, y: 16 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-          transition={{ duration: 0.45, ease: [0.25, 0.1, 0.25, 1], delay: i * 0.08 }}
-          style={{ flex: 1, minWidth: 0, borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.10)', position: 'relative', aspectRatio: '3/4' }}
+          style={{
+            borderRadius: 100,
+            padding: '5px 14px',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            width: 132,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+          animate={{
+            backgroundColor: open ? 'rgba(0,0,0,0.92)' : 'rgba(0,0,0,0.56)',
+            boxShadow: open
+              ? 'inset 0 0 0 2px rgba(80,200,110,0.82)'
+              : 'inset 0 0 0 0.5px rgba(255,255,255,0.22)',
+          }}
+          transition={{ duration: 0.38, ease: [0.4, 0, 0.2, 1] }}
         >
-          <Image src={p.img} alt={p.name} fill sizes="(max-width: 768px) 33vw, 200px" style={{ objectFit: 'cover' }} />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%)', pointerEvents: 'none' }} />
-          <div style={{ position: 'absolute', bottom: 10, left: 10, right: 10, pointerEvents: 'none' }}>
-            <div style={{ fontFamily: HN, fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.75)', lineHeight: 1.2 }}>{p.name}</div>
-            <div style={{ fontFamily: HN, fontSize: 13, fontWeight: 700, color: '#ffffff', letterSpacing: '-0.2px' }}>{p.ctm}</div>
-          </div>
+          <span style={{ fontFamily: HN, fontSize: 10, fontWeight: 500, color: 'rgba(255,255,255,0.55)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+            {data.name}
+          </span>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.span
+              key={open ? 'ctm' : 'retail'}
+              style={{ fontFamily: HN, fontSize: 13, fontWeight: 700, color: open ? '#7de8a0' : '#fff', letterSpacing: '-0.2px' }}
+              initial={{ opacity: 0, y: 4, filter: 'blur(3px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, y: -4, filter: 'blur(3px)' }}
+              transition={{ duration: 0.16, ease: [0.25, 0.1, 0.25, 1] }}
+            >
+              ₹{(open ? data.ctm : data.retail).toLocaleString('en-IN')}
+            </motion.span>
+          </AnimatePresence>
         </motion.div>
-      ))}
+      </div>
     </div>
   )
 }
@@ -56,26 +92,13 @@ function W({ children }: { children: string }) {
   )
 }
 
-function WI({ children }: { children: string }) {
-  return (
-    <>
-      {children.split(/(\s+)/).map((part, i) =>
-        part.match(/^\s+$/) ? part : (
-          <span key={i} className="word inline-block font-sub italic">{part}</span>
-        )
-      )}
-    </>
-  )
-}
-
 /* ─── Big pill toggle — Bethany font only ─── */
 function CostToMakeToggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
-  // Proportions derived from Figma: padding=12, gap=18, border-radius=60
-  const H = 60, PAD = 6, KNOB = H - PAD * 2  // knob = 48px, tighter padding
+  const H = 60, PAD = 6, KNOB = H - PAD * 2
   const GAP = 12
-  const TEXT_PAD = 12  // inner L/R padding within text area
-  const TEXT_W = 90   // text zone width
-  const W_PX = PAD + TEXT_W + GAP + KNOB + PAD  // hugs content
+  const TEXT_PAD = 12
+  const TEXT_W = 90
+  const W_PX = PAD + TEXT_W + GAP + KNOB + PAD
 
   return (
     <motion.button
@@ -109,7 +132,6 @@ function CostToMakeToggle({ on, onToggle }: { on: boolean; onToggle: () => void 
         animate={{ opacity: on ? 0 : 1 }}
         transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
       />
-      {/* Border overlay — multiply blend so it blends into the pill colour */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -120,14 +142,10 @@ function CostToMakeToggle({ on, onToggle }: { on: boolean; onToggle: () => void 
         }}
       />
 
-      {/* Knob — slides left↔right */}
+      {/* Knob */}
       <motion.div
         className="absolute flex items-center justify-center rounded-full bg-white overflow-hidden"
-        style={{
-          width: KNOB, height: KNOB, top: PAD,
-          boxShadow: '0 2px 8px rgba(0,0,0,0.22)',
-          fontSize: KNOB * 0.55,
-        }}
+        style={{ width: KNOB, height: KNOB, top: PAD, boxShadow: '0 2px 8px rgba(0,0,0,0.22)', fontSize: KNOB * 0.55 }}
         animate={{ x: on ? W_PX - KNOB - PAD : PAD }}
         transition={{ type: 'spring', stiffness: 420, damping: 33 }}
       >
@@ -149,7 +167,7 @@ function CostToMakeToggle({ on, onToggle }: { on: boolean; onToggle: () => void 
         </AnimatePresence>
       </motion.div>
 
-      {/* ON label — left side, slides in from left when ON */}
+      {/* ON label */}
       <motion.div
         className="absolute flex flex-col items-center justify-center overflow-hidden"
         style={{ left: TEXT_PAD, top: 0, bottom: 0, width: TEXT_W - TEXT_PAD + PAD, pointerEvents: 'none' }}
@@ -164,7 +182,7 @@ function CostToMakeToggle({ on, onToggle }: { on: boolean; onToggle: () => void 
         </span>
       </motion.div>
 
-      {/* OFF label — right side, slides in from right when OFF */}
+      {/* OFF label */}
       <motion.div
         className="absolute flex flex-col items-center justify-center overflow-hidden"
         style={{ right: TEXT_PAD, top: 0, bottom: 0, width: TEXT_W - TEXT_PAD + PAD, pointerEvents: 'none' }}
@@ -213,39 +231,58 @@ export default function Section2() {
     return () => ctx.revert()
   }, [])
 
+  /* Stable card array — memoized with no deps so stack order is never reset */
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const stackCards = useMemo(() => STACK_CARDS_DATA.map((c, i) => <StackCard key={i} data={c} />), [])
+
   return (
     <section className="bg-white relative z-[1]">
-      <div ref={containerRef} className={`px-6 pt-32 pb-20 md:px-14 md:pt-40 md:pb-32 w-full mx-auto ${CONTENT_MAX_W}`}>
+      <div
+        ref={containerRef}
+        className={`px-8 pt-10 pb-20 md:px-24 md:pt-14 md:pb-32 w-full mx-auto flex flex-col items-center text-center ${CONTENT_MAX_W}`}
+      >
 
-        {/* Headings — always visible */}
-        <p className="font-heading text-[clamp(26px,4.5vw,44px)] font-normal leading-tight text-[#555555] mt-5 mb-2">
+        {/* Headings */}
+        <p className="font-heading text-[clamp(26px,4.5vw,44px)] font-normal leading-tight text-[#555555] mt-4 mb-2">
           <W>Most sales cut prices,</W>
         </p>
-        <p className="font-heading text-[clamp(32px,6vw,62px)] font-normal leading-[1.05] text-[#111111] mb-10">
+        <p className="font-heading text-[clamp(32px,6vw,62px)] font-normal leading-[1.05] text-[#111111] mb-8">
           <W>We cut the markup</W>
         </p>
 
-        {/* Always-visible body copy */}
-        <p className="font-body text-[clamp(16px,1.8vw,20px)] leading-[1.7] text-[#555555] my-5">
-          <W>Last year, VIRGIO launched India's first Cost-to-Make Fashion Fair. No margins. No mark-ups. Just the truth behind the price.</W>
-          <br />
+        {/* Body copy — consistent mb-5 spacing throughout */}
+        <p className="font-body text-[clamp(16px,1.8vw,20px)] leading-[1.5] text-[#555555] mb-5 max-w-2xl">
+          <W>Last year, we took a massive bet, something most fashion brands would run from. We launched India&apos;s first Cost-to-Make Fashion Fair. No margins. No mark-ups.</W>
         </p>
-        <p className="font-body text-[clamp(16px,1.8vw,20px)] leading-[1.7] text-[#555555] my-5">
-
-          <W>The response was overwhelming. So we're bringing it back.</W>
+        <p className="font-body text-[clamp(16px,1.8vw,20px)] leading-[1.5] text-[#555555] mb-5 max-w-2xl">
+          <W>The response was overwhelming. So we&apos;re bringing it back.</W>
         </p>
-        <p className="font-medium text-[clamp(20px,3vw,28px)] leading-[1.55] text-[#111111]">
-          <W>For five days, VIRGIO removes retail margins and sells on Cost-to-Make.</W>
+        <p className="font-medium text-[clamp(20px,3vw,28px)] leading-[1.55] text-[#111111] mb-0 max-w-2xl">
+          <W>For five days, we remove all margins and sell at Cost-to-Make</W>
         </p>
 
-        <ProductShelf />
+        {/* Stack + Toggle — single scroll-reveal block */}
+        <div className="word mt-10 mb-0 flex flex-col items-center">
+          <div style={{ width: 260, height: 320, position: 'relative' }}>
+            <ToggleContext.Provider value={open}>
+              <Stack
+                cards={stackCards}
+                autoplay
+                autoplayDelay={2800}
+                sendToBackOnClick
+                animationConfig={{ stiffness: 200, damping: 24 }}
+                sensitivity={160}
+              />
+            </ToggleContext.Provider>
+          </div>
 
-        {/* Toggle — scroll-revealed with the same blur effect as the words */}
-        <span className="word inline-block mt-6 mb-1">
-          <CostToMakeToggle on={open} onToggle={() => setOpen(v => !v)} />
-        </span>
+          {/* Toggle — bleeds into bottom of stack */}
+          <div style={{ marginTop: -28, position: 'relative', zIndex: 10 }}>
+            <CostToMakeToggle on={open} onToggle={() => setOpen(v => !v)} />
+          </div>
+        </div>
 
-        {/* Collapsible: "You'll see exactly..." onward */}
+        {/* Collapsible reveal */}
         <motion.div
           initial={false}
           animate={{ height: open ? 'auto' : 0 }}
@@ -259,25 +296,21 @@ export default function Section2() {
               filter: open ? 'blur(0px)' : 'blur(10px)',
               y: open ? 0 : -14,
             }}
-            transition={{
-              duration: 0.45,
-              ease: [0.25, 0.1, 0.25, 1],
-              delay: open ? 0.07 : 0,
-            }}
+            transition={{ duration: 0.45, ease: [0.25, 0.1, 0.25, 1], delay: open ? 0.07 : 0 }}
           >
-            <p className="font-body font-medium text-[clamp(20px,3vw,28px)] leading-[1.55] text-[#111111] my-5">
+            <p className="font-body font-medium text-[clamp(20px,3vw,28px)] leading-[1.55] text-[#111111] my-5 max-w-2xl">
               You&apos;ll see exactly what it takes to create your clothes and <span className="font-sub italic">you&apos;ll pay only for that.</span>
             </p>
-            <p className="font-body font-medium text-[clamp(20px,3vw,28px)] leading-[1.55] text-[#111111] my-5">
+            <p className="font-body font-medium text-[clamp(20px,3vw,28px)] leading-[1.55] text-[#111111] my-5 max-w-2xl">
               That&apos;s Fabric. Labour. Packaging. Logistics.
             </p>
-            <p className="font-body font-medium text-[clamp(20px,3vw,28px)] leading-[1.55] text-[#111111] mb-10">
+            <p className="font-body font-medium text-[clamp(20px,3vw,28px)] leading-[1.55] text-[#111111] mb-10 max-w-2xl">
               The rest is on us.
             </p>
           </motion.div>
         </motion.div>
 
-        {/* CTA — always visible, shifts naturally */}
+        {/* CTA */}
         <p className="font-heading text-[clamp(22px,3.5vw,36px)] font-normal leading-tight text-[#111111] mt-10 mb-5">
           <W>Shop before everyone else with Early Access</W>
         </p>
@@ -285,7 +318,7 @@ export default function Section2() {
         <span className="word inline-block">
           <a
             href="#footer-countdown"
-            className="inline-block bg-[#0D0D0D] text-white rounded-full px-8 py-3 text-[14px] font-medium font-sans transition-opacity hover:opacity-80 active:scale-[0.97]"
+            className="inline-block bg-[#0D0D0D] text-white rounded-full px-8 py-3 text-[14px] font-medium font-sans transition-opacity duration-300 hover:opacity-75 active:scale-[0.97]"
           >
             Get early access
           </a>
