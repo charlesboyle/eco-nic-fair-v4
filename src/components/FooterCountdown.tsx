@@ -100,11 +100,13 @@ export default function FooterCountdown() {
             aria-hidden
             style={{
               position: 'absolute',
-              bottom: 0, left: 0, right: 0,
+              top: 0, left: 0, right: 0,
               height: 90,
               backgroundImage: 'repeating-linear-gradient(to right, #009245 0px, #009245 20px, #F18C22 20px, #F18C22 40px)',
-              filter: 'blur(28px)',
+              filter: 'blur(20px)',
               opacity: 0.13,
+              maskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)',
               pointerEvents: 'none',
               zIndex: 0,
             }}

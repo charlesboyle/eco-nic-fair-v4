@@ -628,10 +628,10 @@ export default function SectionHowToShop() {
           className="leading-tight text-[#888] mb-1"
           style={{ fontFamily: 'Helvetica Neue, Helvetica, sans-serif', fontSize: 'clamp(15px,2.2vw,20px)' }}
         >
-          Before you shop,
+          How it works
         </p>
         <h2 className="font-heading text-[clamp(32px,5vw,56px)] leading-[1.05] text-[#111]">
-          Here&apos;s how it works
+          Fair pricing before the fair
         </h2>
       </motion.div>
 
