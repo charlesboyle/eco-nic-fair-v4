@@ -193,16 +193,15 @@ export default function Section2() {
         </p>
 
         {/* Always-visible body copy */}
-        <p className="font-body font-medium text-[clamp(20px,3vw,28px)] leading-[1.55] text-[#111111] my-5">
-          <W>Last year, VIRGIO launched India's first Cost to Make Fashion Fair.</W>
+        <p className="font-body text-[clamp(16px,1.8vw,20px)] leading-[1.7] text-[#555555] my-5">
+          <W>Last year, VIRGIO launched India's first Cost-to-Make Fashion Fair.</W>
           <br />
-          <W>No margins. No mark-ups. Just the</W>{' '}<WI>truth</WI>{' '}<W>behind the price.</W>
-        </p>
-        <p className="font-body font-medium text-[clamp(20px,3vw,28px)] leading-[1.55] text-[#111111] my-5">
+          <W>No margins. No mark-ups. Just the truth behind the price.</W>
+          <br />
           <W>The response was overwhelming. So we're bringing it back.</W>
         </p>
-        <p className="font-body font-medium text-[clamp(20px,3vw,28px)] leading-[1.55] text-[#111111] my-5">
-          <WI>For five days,</WI>{' '}<W>VIRGIO removes retail margins and sells on cost-to-make.</W>
+        <p className="font-body text-[clamp(16px,1.8vw,20px)] leading-[1.7] text-[#555555] my-5">
+          <W>For five days, VIRGIO removes retail margins and sells on Cost-to-Make.</W>
         </p>
 
         {/* Toggle — scroll-revealed with the same blur effect as the words */}
